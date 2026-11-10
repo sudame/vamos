@@ -1,11 +1,12 @@
 import { useMemo, useState } from "preact/hooks";
-import { fold } from "../answer.js";
-import { CATEGORIES } from "../categories.js";
-import { Explain, Icon, Level, Screen, Spanish } from "../components/ui.jsx";
-import { PHRASES } from "../data.js";
-import { masteryOf } from "../srs.js";
+import { fold } from "../answer.ts";
+import { CATEGORIES } from "../categories.ts";
+import { Explain, Icon, Level, Screen, Spanish } from "../components/ui.tsx";
+import { PHRASES } from "../data.ts";
+import { masteryOf } from "../srs.ts";
+import type { Phrase, ScreenProps, State } from "../types.ts";
 
-function matches(p, q) {
+function matches(p: Phrase, q: string): boolean {
   if (!q) return true;
   const f = fold(q);
   return (
@@ -16,10 +17,10 @@ function matches(p, q) {
   );
 }
 
-export function Browse({ state, cat: initialCat }) {
+export function Browse({ state, cat: initialCat }: ScreenProps & { cat: string }) {
   const [query, setQuery] = useState("");
   const [cat, setCat] = useState(initialCat || "");
-  const [open, setOpen] = useState(null);
+  const [open, setOpen] = useState<string | null>(null);
   const q = query.trim();
   const list = useMemo(() => PHRASES.filter((p) => (!cat || p.cat === cat) && matches(p, q)), [cat, q]);
 
@@ -63,7 +64,17 @@ export function Browse({ state, cat: initialCat }) {
   );
 }
 
-function PhraseRow({ phrase: p, state, open, onToggle }) {
+function PhraseRow({
+  phrase: p,
+  state,
+  open,
+  onToggle,
+}: {
+  phrase: Phrase;
+  state: State;
+  open: boolean;
+  onToggle: () => void;
+}) {
   const rate = state.settings.rate;
   return (
     <li class={open ? "phrase open" : "phrase"}>
@@ -80,7 +91,7 @@ function PhraseRow({ phrase: p, state, open, onToggle }) {
       {open && (
         <div class="phrase-detail">
           {p.kana && <p class="kana">{p.kana}</p>}
-          {p.alt?.length > 0 && (
+          {p.alt && p.alt.length > 0 && (
             <p class="note">
               別の言い方 <span lang="es">{p.alt.join(" / ")}</span>
             </p>
@@ -93,7 +104,7 @@ function PhraseRow({ phrase: p, state, open, onToggle }) {
 }
 
 // 文法ノートから使うフレーズの一覧
-export function PhraseList({ phrases, state }) {
+export function PhraseList({ phrases, state }: { phrases: Phrase[]; state: State }) {
   return (
     <ul class="rows">
       {phrases.map((p) => (

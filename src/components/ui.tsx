@@ -1,6 +1,8 @@
-import { categoryById } from "../categories.js";
-import { grammarById } from "../data.js";
-import { speak } from "../speech.js";
+import type { ComponentChildren } from "preact";
+import { categoryById } from "../categories.ts";
+import { grammarById } from "../data.ts";
+import { speak } from "../speech.ts";
+import type { Mastery, Phrase } from "../types.ts";
 
 const ICONS = {
   learn:
@@ -16,7 +18,9 @@ const ICONS = {
   speaker: "M4 9.5v5h3.5L12 18V6L7.5 9.5zM15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11",
 };
 
-export function Icon({ name, size = 24 }) {
+type IconName = keyof typeof ICONS;
+
+export function Icon({ name, size = 24 }: { name: IconName; size?: number }) {
   return (
     <svg
       class="icon"
@@ -35,14 +39,14 @@ export function Icon({ name, size = 24 }) {
   );
 }
 
-const TABS = [
+const TABS: [path: string, icon: IconName, label: string][] = [
   ["", "learn", "学ぶ"],
   ["browse", "phrases", "フレーズ"],
   ["grammar", "grammar", "文法"],
   ["settings", "settings", "設定"],
 ];
 
-export function TabBar({ current }) {
+export function TabBar({ current }: { current: string }) {
   return (
     <nav class="tabbar" aria-label="画面の切り替え">
       {TABS.map(([path, icon, label]) => (
@@ -56,7 +60,19 @@ export function TabBar({ current }) {
 }
 
 // タブの画面の骨組み。title は大きな見出し、back があれば戻るリンクを出す
-export function Screen({ tab, title, back, children, wide = false }) {
+export function Screen({
+  tab,
+  title,
+  back,
+  children,
+  wide = false,
+}: {
+  tab: string;
+  title: string;
+  back?: string;
+  children?: ComponentChildren;
+  wide?: boolean;
+}) {
   return (
     <div class="screen">
       <header class="screen-head">
@@ -74,7 +90,17 @@ export function Screen({ tab, title, back, children, wide = false }) {
 }
 
 // 押すと読み上げるスペイン語。文そのものを大きな押し場所にする
-export function Spanish({ text, rate, class: cls = "", children }) {
+export function Spanish({
+  text,
+  rate,
+  class: cls = "",
+  children,
+}: {
+  text: string;
+  rate?: number;
+  class?: string;
+  children?: ComponentChildren;
+}) {
   return (
     <button type="button" class={`es-tap ${cls}`} lang="es" onClick={() => speak(text, rate)} title="押すと読み上げる">
       {children ?? text}
@@ -82,7 +108,7 @@ export function Spanish({ text, rate, class: cls = "", children }) {
   );
 }
 
-export function SpeakButton({ text, rate, label = "読み上げる" }) {
+export function SpeakButton({ text, rate, label = "読み上げる" }: { text: string; rate?: number; label?: string }) {
   return (
     <button
       type="button"
@@ -98,13 +124,13 @@ export function SpeakButton({ text, rate, label = "読み上げる" }) {
   );
 }
 
-export function catName(cat) {
+export function catName(cat: string): string {
   return categoryById.get(cat)?.ja ?? "";
 }
 
 const LEVEL_LABEL = ["まだ", "覚えかけ", "分かる", "言える"];
 
-export function Level({ level }) {
+export function Level({ level }: { level: Mastery }) {
   return (
     <span class={`level l${level}`} title={LEVEL_LABEL[level]}>
       <span class="level-dot" aria-hidden="true" />
@@ -114,11 +140,11 @@ export function Level({ level }) {
 }
 
 // フレーズの解説: 単語の分解、メモ、関係する文法ノート
-export function Explain({ phrase }) {
+export function Explain({ phrase }: { phrase: Phrase }) {
   const all = phrase.words ?? [];
   // 1 語だけのフレーズは表にしても同じことの繰り返しになる
   const words = all.length === 1 && all[0].base == null ? [] : all;
-  const notes = (phrase.grammar ?? []).map((id) => grammarById.get(id)).filter(Boolean);
+  const notes = (phrase.grammar ?? []).map((id) => grammarById.get(id)).filter((g) => g != null);
   return (
     <div class="explain">
       {words.length > 0 && (

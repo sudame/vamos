@@ -1,11 +1,14 @@
+import type { ComponentChildren } from "preact";
 import { useEffect, useId, useState } from "preact/hooks";
-import { Screen } from "../components/ui.jsx";
-import { onVoicesChanged, pickVoice, recordedCount, spanishVoices, speak } from "../speech.js";
-import { emptyState, parseBackup } from "../storage.js";
+import { Screen } from "../components/ui.tsx";
+import { onVoicesChanged, pickVoice, recordedCount, spanishVoices, speak } from "../speech.ts";
+import { emptyState, parseBackup } from "../storage.ts";
+import type { ScreenProps, Settings as SettingsData } from "../types.ts";
 
-export function Settings({ state, update }) {
+export function Settings({ state, update }: ScreenProps) {
   const s = state.settings;
-  const set = (k, v) => update((st) => ({ ...st, settings: { ...st.settings, [k]: v } }));
+  const set = <K extends keyof SettingsData>(k: K, v: SettingsData[K]) =>
+    update((st) => ({ ...st, settings: { ...st.settings, [k]: v } }));
   const [, setVoices] = useState(spanishVoices);
   const [msg, setMsg] = useState("");
   useEffect(() => onVoicesChanged(() => setVoices(spanishVoices())), []);
@@ -22,7 +25,7 @@ export function Settings({ state, update }) {
     setMsg("記録を書き出しました。");
   };
 
-  const importData = async (file) => {
+  const importData = async (file: File) => {
     const data = parseBackup(await file.text());
     if (!data) {
       setMsg("読み込めませんでした。このアプリで書き出したファイルを選んでください。");
@@ -156,7 +159,7 @@ export function Settings({ state, update }) {
   );
 }
 
-function Group({ title, children }) {
+function Group({ title, children }: { title: string; children?: ComponentChildren }) {
   return (
     <section>
       <h2 class="section-title">{title}</h2>
@@ -165,7 +168,7 @@ function Group({ title, children }) {
   );
 }
 
-function Switch({ label, value, onChange }) {
+function Switch({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
   const id = useId();
   return (
     <li class="row">
@@ -183,7 +186,17 @@ function Switch({ label, value, onChange }) {
   );
 }
 
-function Choice({ label, value, onChange, options }) {
+function Choice<T extends string>({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: T;
+  onChange: (v: T) => void;
+  options: [value: T, label: string][];
+}) {
   const name = useId();
   return (
     <li class="row choice-row">

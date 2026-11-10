@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { DEFAULT_SETTINGS, dayKey, migrate, parseBackup, recordAnswer, streak } from "../src/storage.js";
+import { DEFAULT_SETTINGS, dayKey, migrate, parseBackup, recordAnswer, streak } from "../src/storage.ts";
 
 test("migrate は壊れた入力でも空の状態を返す", () => {
   assert.deepEqual(migrate(null).cards, {});
@@ -21,7 +21,7 @@ test("recordAnswer はその日の回答数と正答数を足す", () => {
 });
 
 test("streak は今日が未回答でも昨日まで続いていれば数える", () => {
-  const day = (d) => new Date(2026, 10, d, 12).getTime();
+  const day = (d: number) => new Date(2026, 10, d, 12).getTime();
   const days = {
     [dayKey(day(8))]: { answered: 1, correct: 1 },
     [dayKey(day(9))]: { answered: 3, correct: 2 },

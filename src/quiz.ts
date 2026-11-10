@@ -1,8 +1,9 @@
 // カードから問題を作る。
 
-import { parseCardId } from "./srs.js";
+import { parseCardId } from "./srs.ts";
+import type { CardPick, Phrase, Question, Settings } from "./types.ts";
 
-export function shuffle(arr, rng = Math.random) {
+export function shuffle<T>(arr: readonly T[], rng: () => number = Math.random): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
@@ -12,9 +13,9 @@ export function shuffle(arr, rng = Math.random) {
 }
 
 // 同じカテゴリから優先して、日本語訳が重ならない誤答を n 個選ぶ
-export function distractors(phrase, all, n = 3, rng = Math.random) {
+export function distractors(phrase: Phrase, all: Phrase[], n = 3, rng: () => number = Math.random): Phrase[] {
   const seen = new Set([phrase.ja]);
-  const out = [];
+  const out: Phrase[] = [];
   const pools = [
     shuffle(
       all.filter((p) => p.cat === phrase.cat),
@@ -39,7 +40,13 @@ export function distractors(phrase, all, n = 3, rng = Math.random) {
 //   listen 音だけ聞いて、日本語を 4 択
 //   flip   日本語を見て、スペイン語を思い出してからめくる
 //   type   日本語を見て、スペイン語を打ち込む
-export function makeQuestion(pick, byId, all, settings, { canSpeak = false, rng = Math.random } = {}) {
+export function makeQuestion(
+  pick: CardPick,
+  byId: Map<string, Phrase>,
+  all: Phrase[],
+  settings: Settings,
+  { canSpeak = false, rng = Math.random }: { canSpeak?: boolean; rng?: () => number } = {},
+): Question | null {
   const { phraseId, dir } = parseCardId(pick.id);
   const phrase = byId.get(phraseId);
   if (!phrase) return null;

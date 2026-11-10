@@ -1,27 +1,29 @@
 // 打ち込んだスペイン語の答え合わせ。
 
+import type { CheckResult, DiffMark } from "./types.ts";
+
 const PUNCT_CLASS = "[¿?¡!.,;:\"'“”‘’«»…()\\-–—]";
 const PUNCT = new RegExp(PUNCT_CLASS, "g");
 const PUNCT_CHAR = new RegExp(`^${PUNCT_CLASS}$`);
 
 // 大文字小文字・記号・空白の違いを無視する
-export function normalize(s) {
+export function normalize(s: string): string {
   return s.normalize("NFC").toLowerCase().replace(PUNCT, " ").replace(/\s+/g, " ").trim();
 }
 
 // アクセント記号も無視する（ñ も n として扱う）
-export function fold(s) {
+export function fold(s: string): string {
   return normalize(s).normalize("NFD").replace(/[̀-ͯ]/g, "");
 }
 
-function withoutPorFavor(s) {
+function withoutPorFavor(s: string): string {
   return s
     .replace(/\bpor favor\b/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
 
-export function levenshtein(a, b) {
+export function levenshtein(a: string, b: string): number {
   if (a === b) return 0;
   const m = a.length;
   const n = b.length;
@@ -42,12 +44,16 @@ export function levenshtein(a, b) {
 //   close  1〜2 文字だけ違う。打ち間違いか、別の語（junio と julio など）かは区別できないので、正解には数えない
 //   wrong  違う
 // matched は一番近かった正解
-export function check(input, answers) {
+export function check(input: string, answers: string[]): { result: CheckResult; matched: string } {
   const inN = normalize(input);
   if (inN === "") return { result: "wrong", matched: answers[0] };
   const inF = fold(input);
 
-  let best = { result: "wrong", matched: answers[0], dist: Number.POSITIVE_INFINITY };
+  let best: { result: CheckResult; matched: string; dist: number } = {
+    result: "wrong",
+    matched: answers[0],
+    dist: Number.POSITIVE_INFINITY,
+  };
   for (const ans of answers) {
     const aN = normalize(ans);
     const aF = fold(ans);
@@ -70,19 +76,19 @@ export function check(input, answers) {
 
 // 文字単位の違いを返す（正解の側から見て、合っている文字か）。
 // 表示用なので、アクセントの違いも「違う」として印を付ける。
-export function diffMarks(input, answer) {
+export function diffMarks(input: string, answer: string): DiffMark[] {
   const a = [...answer];
   const b = [...input];
   const m = a.length;
   const n = b.length;
-  const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
-  const eq = (x, y) => x.toLowerCase() === y.toLowerCase();
+  const dp: number[][] = Array.from({ length: m + 1 }, () => new Array<number>(n + 1).fill(0));
+  const eq = (x: string, y: string) => x.toLowerCase() === y.toLowerCase();
   for (let i = m - 1; i >= 0; i--) {
     for (let j = n - 1; j >= 0; j--) {
       dp[i][j] = eq(a[i], b[j]) ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
     }
   }
-  const marks = [];
+  const marks: DiffMark[] = [];
   let i = 0;
   let j = 0;
   while (i < m) {

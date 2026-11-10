@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "preact/hooks";
-import { Browse } from "./screens/Browse.jsx";
-import { Drill } from "./screens/Drill.jsx";
-import { GrammarList, GrammarNote } from "./screens/Grammar.jsx";
-import { Home } from "./screens/Home.jsx";
-import { Settings } from "./screens/Settings.jsx";
-import { setSpeechPrefs } from "./speech.js";
-import { load, save } from "./storage.js";
+import { Browse } from "./screens/Browse.tsx";
+import { Drill } from "./screens/Drill.tsx";
+import { GrammarList, GrammarNote } from "./screens/Grammar.tsx";
+import { Home } from "./screens/Home.tsx";
+import { Settings } from "./screens/Settings.tsx";
+import { setSpeechPrefs } from "./speech.ts";
+import { load, save } from "./storage.ts";
+import type { State, Theme } from "./types.ts";
 
 function parseHash() {
   const h = location.hash.replace(/^#\/?/, "");
@@ -30,7 +31,7 @@ function useRoute() {
   return route;
 }
 
-function useTheme(theme) {
+function useTheme(theme: Theme) {
   useEffect(() => {
     const root = document.documentElement;
     if (theme === "light" || theme === "dark") root.dataset.theme = theme;
@@ -44,7 +45,7 @@ export function App() {
   useTheme(state.settings.theme);
   setSpeechPrefs({ useRecorded: state.settings.useRecorded });
 
-  const update = useCallback((fn) => {
+  const update = useCallback((fn: (prev: State) => State) => {
     setState((prev) => {
       const next = fn(prev);
       save(next);

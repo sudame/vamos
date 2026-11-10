@@ -1,4 +1,6 @@
-export const CATEGORIES = [
+import type { Category } from "./types.ts";
+
+export const CATEGORIES: Category[] = [
   { id: "basic", ja: "挨拶・基本", es: "Lo básico", icon: "👋" },
   { id: "number", ja: "数字・値段・時刻", es: "Números", icon: "🔢" },
   { id: "time", ja: "曜日・日付", es: "El tiempo", icon: "📅" },

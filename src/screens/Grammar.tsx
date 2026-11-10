@@ -1,12 +1,13 @@
 import { useState } from "preact/hooks";
-import { Icon, Screen, Spanish } from "../components/ui.jsx";
-import { GRAMMAR, grammarById, phrasesByGrammar } from "../data.js";
-import { masteryOf } from "../srs.js";
-import { PhraseList } from "./Browse.jsx";
+import { Icon, Screen, Spanish } from "../components/ui.tsx";
+import { GRAMMAR, grammarById, phrasesByGrammar } from "../data.ts";
+import { masteryOf } from "../srs.ts";
+import type { GrammarBlock, ScreenProps } from "../types.ts";
+import { PhraseList } from "./Browse.tsx";
 
 const SHOW_RELATED = 6;
 
-export function GrammarList({ state }) {
+export function GrammarList({ state }: ScreenProps) {
   return (
     <Screen tab="grammar" title="文法ノート">
       <p class="lead">型を知っておくと、単語を入れ替えて言えることが増えます。</p>
@@ -37,7 +38,7 @@ export function GrammarList({ state }) {
   );
 }
 
-export function GrammarNote({ state, id }) {
+export function GrammarNote({ state, id }: ScreenProps & { id: string }) {
   const g = grammarById.get(id);
   const [more, setMore] = useState(false);
   if (!g) {
@@ -60,7 +61,7 @@ export function GrammarNote({ state, id }) {
           <Block key={i} b={b} />
         ))}
 
-        {g.swap?.length > 0 && (
+        {g.swap && g.swap.length > 0 && (
           <section>
             <h3 class="section-title">入れ替えてみる</h3>
             <ul class="rows">
@@ -102,7 +103,7 @@ export function GrammarNote({ state, id }) {
   );
 }
 
-function Block({ b }) {
+function Block({ b }: { b: GrammarBlock }) {
   switch (b.type) {
     case "p":
       return <p class="note-p">{b.text}</p>;

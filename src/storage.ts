@@ -1,8 +1,10 @@
 // 学習の記録は端末の localStorage にだけ置く。サーバーには何も送らない。
 
+import type { Card, DayRecord, Settings, State } from "./types.ts";
+
 const KEY = "vamos:v1";
 
-export const DEFAULT_SETTINGS = Object.freeze({
+export const DEFAULT_SETTINGS: Readonly<Settings> = Object.freeze({
   cats: null, // null はすべてのカテゴリ
   produceMode: "flip", // flip: めくって自己採点 / type: 打ち込む
   autoSpeak: true,
@@ -14,37 +16,44 @@ export const DEFAULT_SETTINGS = Object.freeze({
   theme: "auto",
 });
 
-export function emptyState() {
+export function emptyState(): State {
   return { cards: {}, days: {}, settings: { ...DEFAULT_SETTINGS } };
 }
 
-const isObj = (v) => v != null && typeof v === "object" && !Array.isArray(v);
+const isObj = (v: unknown): v is Record<string, unknown> => v != null && typeof v === "object" && !Array.isArray(v);
 
-function validSetting(key, v) {
+// produceMode と theme は型（string）しか見ていないので、知らない値もそのまま通る
+function validSetting<K extends keyof Settings>(key: K, v: unknown): v is Settings[K] {
   if (key === "cats") return v === null || (Array.isArray(v) && v.every((c) => typeof c === "string"));
   return typeof v === typeof DEFAULT_SETTINGS[key];
 }
 
-export function migrate(raw) {
+export function migrate(raw: unknown): State {
   const s = emptyState();
   if (!isObj(raw)) return s;
   if (isObj(raw.cards)) {
     for (const [id, c] of Object.entries(raw.cards)) {
-      if (isObj(c) && typeof c.state === "string" && Number.isFinite(c.due)) s.cards[id] = c;
+      // state と due しか確かめていない。ほかの項目は書き出したときの形を信じる
+      if (isObj(c) && typeof c.state === "string" && Number.isFinite(c.due)) s.cards[id] = c as unknown as Card;
     }
   }
-  if (isObj(raw.days)) s.days = raw.days;
+  // 日ごとの記録は中身を確かめずに受け入れている
+  if (isObj(raw.days)) s.days = raw.days as Record<string, DayRecord>;
   if (isObj(raw.settings)) {
-    for (const k of Object.keys(DEFAULT_SETTINGS)) {
-      if (k in raw.settings && validSetting(k, raw.settings[k])) s.settings[k] = raw.settings[k];
+    for (const k of Object.keys(DEFAULT_SETTINGS) as (keyof Settings)[]) {
+      if (k in raw.settings) copySetting(s.settings, k, raw.settings[k]);
     }
   }
   return s;
 }
 
+function copySetting<K extends keyof Settings>(settings: Settings, key: K, v: unknown) {
+  if (validSetting(key, v)) settings[key] = v;
+}
+
 // 書き出したファイルを読み込むとき用。記録らしくなければ null
-export function parseBackup(text) {
-  let raw;
+export function parseBackup(text: string): State | null {
+  let raw: unknown;
   try {
     raw = JSON.parse(text);
   } catch {
@@ -54,7 +63,7 @@ export function parseBackup(text) {
   return migrate(raw);
 }
 
-export function load() {
+export function load(): State {
   try {
     const text = localStorage.getItem(KEY);
     return migrate(text ? JSON.parse(text) : null);
@@ -63,7 +72,7 @@ export function load() {
   }
 }
 
-export function save(state) {
+export function save(state: State): boolean {
   try {
     localStorage.setItem(KEY, JSON.stringify(state));
     return true;
@@ -72,21 +81,25 @@ export function save(state) {
   }
 }
 
-export function dayKey(now) {
+export function dayKey(now: number): string {
   const d = new Date(now);
   const mm = String(d.getMonth() + 1).padStart(2, "0");
   const dd = String(d.getDate()).padStart(2, "0");
   return `${d.getFullYear()}-${mm}-${dd}`;
 }
 
-export function recordAnswer(days, now, correct) {
+export function recordAnswer(
+  days: Record<string, DayRecord>,
+  now: number,
+  correct: boolean,
+): Record<string, DayRecord> {
   const k = dayKey(now);
   const d = days[k] ?? { answered: 0, correct: 0 };
   return { ...days, [k]: { answered: d.answered + 1, correct: d.correct + (correct ? 1 : 0) } };
 }
 
 // 今日を含めて連続で 1 問以上解いた日数
-export function streak(days, now) {
+export function streak(days: Record<string, DayRecord>, now: number): number {
   let n = 0;
   const d = new Date(now);
   // 今日まだ解いていなくても、昨日まで続いていれば数える

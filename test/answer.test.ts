@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { check, diffMarks, fold, normalize } from "../src/answer.js";
+import { check, diffMarks, fold, normalize } from "../src/answer.ts";
 
 test("normalize は大文字・記号・空白を無視する", () => {
   assert.equal(normalize("  ¿Me pones   una CAÑA, por favor? "), "me pones una caña por favor");

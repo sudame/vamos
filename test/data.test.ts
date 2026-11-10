@@ -2,11 +2,13 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
-import { CATEGORY_IDS } from "../src/categories.js";
+import { CATEGORY_IDS } from "../src/categories.ts";
+import type { AudioManifest, Grammar, Phrase } from "../src/types.ts";
 
-const read = (p) => JSON.parse(readFileSync(new URL(p, import.meta.url), "utf8"));
-const phrases = read("../src/data/phrases.json");
-const grammar = read("../src/data/grammar.json");
+// 型は期待する形。実際にその形かをここのテストで確かめる
+const read = <T>(p: string): T => JSON.parse(readFileSync(new URL(p, import.meta.url), "utf8"));
+const phrases = read<Phrase[]>("../src/data/phrases.json");
+const grammar = read<Grammar[]>("../src/data/grammar.json");
 const grammarIds = new Set(grammar.map((g) => g.id));
 
 test("フレーズの id は一意で、カテゴリは既知のもの", () => {
@@ -62,7 +64,7 @@ test("文法ノートの id は一意で、本文のブロックは既知の形"
 });
 
 test("収録音声のマニフェストは、今のフレーズと例文の文だけを持つ", () => {
-  const audio = read("../src/data/audio.json");
+  const audio = read<AudioManifest>("../src/data/audio.json");
   const texts = new Set([...phrases.map((p) => p.es), ...grammar.flatMap((g) => (g.swap ?? []).map((s) => s.es))]);
   for (const t of Object.keys(audio.files)) assert.ok(texts.has(t), `使われていない音声: ${t}`);
   if (Object.keys(audio.files).length > 0) {

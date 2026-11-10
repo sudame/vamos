@@ -1,20 +1,33 @@
+import type { ComponentChildren } from "preact";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { check, diffMarks } from "../answer.js";
-import { catName, Explain, Icon, Spanish } from "../components/ui.jsx";
-import { eligiblePhrases, PHRASES, phraseById } from "../data.js";
-import { makeQuestion } from "../quiz.js";
-import { canSpeak, speak, stopSpeaking } from "../speech.js";
-import { GRADE, MINUTE, newCard, pickNext, schedule } from "../srs.js";
-import { dayKey, recordAnswer } from "../storage.js";
+import { check, diffMarks } from "../answer.ts";
+import { catName, Explain, Icon, Spanish } from "../components/ui.tsx";
+import { eligiblePhrases, PHRASES, phraseById } from "../data.ts";
+import { makeQuestion } from "../quiz.ts";
+import { canSpeak, speak, stopSpeaking } from "../speech.ts";
+import { GRADE, MINUTE, newCard, pickNext, schedule } from "../srs.ts";
+import { dayKey, recordAnswer } from "../storage.ts";
+import type {
+  Answer,
+  Card,
+  Grade,
+  Phrase,
+  PickKind,
+  Question,
+  Round,
+  ScreenProps,
+  Settings,
+  TypedAnswer,
+} from "../types.ts";
 
 // 1 ラウンドの問題数。区切りがあると、機内でも休みどころが分かる
 const ROUND = 20;
 // 正解したあと次へ進むまでの時間
 const AUTO_NEXT_MS = 1100;
 const ACCENT_KEYS = ["á", "é", "í", "ó", "ú", "ñ", "ü", "¿", "¡"];
-const KIND_LABEL = { new: "新しいフレーズ", due: "復習", ahead: "先取り" };
+const KIND_LABEL: Record<PickKind, string> = { new: "新しいフレーズ", due: "復習", ahead: "先取り" };
 
-function formatWait(ms) {
+function formatWait(ms: number): string {
   if (ms < 60 * MINUTE) return `${Math.max(1, Math.round(ms / MINUTE))}分後`;
   if (ms < 24 * 60 * MINUTE) return `${Math.round(ms / (60 * MINUTE))}時間後`;
   const d = ms / (24 * 60 * MINUTE);
@@ -22,19 +35,19 @@ function formatWait(ms) {
   return `${Math.round(d / 30)}か月後`;
 }
 
-export function Drill({ state, update }) {
+export function Drill({ state, update }: ScreenProps) {
   const { settings } = state;
   const phrases = useMemo(() => eligiblePhrases(settings), [settings]);
-  const [q, setQ] = useState(null);
-  const [answer, setAnswer] = useState(null);
+  const [q, setQ] = useState<Question | null>(null);
+  const [answer, setAnswer] = useState<Answer | null>(null);
   const [revealed, setRevealed] = useState(false);
-  const [round, setRound] = useState({ n: 0, correct: 0, missed: [] });
+  const [round, setRound] = useState<Round>({ n: 0, correct: 0, missed: [] });
   const [finished, setFinished] = useState(false);
   const [autoNext, setAutoNext] = useState(false);
-  const recent = useRef([]);
+  const recent = useRef<string[]>([]);
   const cardsRef = useRef(state.cards);
   cardsRef.current = state.cards;
-  const before = useRef(null); // 採点前のカード。「実は合ってた」で使う
+  const before = useRef<Card | null>(null); // 採点前のカード。「実は合ってた」で使う
   const answered = useRef(0); // このラウンドで答えた数。採点の直後に次へ進むときも正しく数えるため ref で持つ
 
   const nextQuestion = () => {
@@ -88,7 +101,8 @@ export function Drill({ state, update }) {
     return () => clearTimeout(t);
   }, [autoNext]);
 
-  const grade = (g, correct) => {
+  const grade = (g: Grade, correct: boolean) => {
+    if (!q) return;
     const now = Date.now();
     answered.current += 1;
     update((s) => ({
@@ -103,22 +117,22 @@ export function Drill({ state, update }) {
     }));
   };
 
-  const finishAnswer = (a) => {
+  const finishAnswer = (a: Answer) => {
     setAnswer(a);
     if (a.correct && settings.autoNext) setAutoNext(true);
     if (!a.correct) navigator.vibrate?.(30);
   };
 
-  const choose = (opt) => {
-    if (answer) return;
+  const choose = (opt: Phrase) => {
+    if (answer || !q) return;
     const correct = opt.id === q.phrase.id;
     grade(correct ? GRADE.good : GRADE.again, correct);
     finishAnswer({ correct, chosen: opt.id });
     if (settings.autoSpeak || q.type === "listen") speak(q.phrase.es, settings.rate);
   };
 
-  const submitTyped = (typed) => {
-    if (answer) return;
+  const submitTyped = (typed: string) => {
+    if (answer || !q) return;
     const r = check(typed, [q.phrase.es, ...(q.phrase.alt ?? [])]);
     const correct = r.result === "exact" || r.result === "accent";
     grade(correct ? GRADE.good : GRADE.again, correct);
@@ -128,6 +142,7 @@ export function Drill({ state, update }) {
 
   // 不正解を取り消して正解にする
   const override = () => {
+    if (!q) return;
     const now = Date.now();
     update((s) => {
       const k = dayKey(now);
@@ -139,7 +154,7 @@ export function Drill({ state, update }) {
       };
     });
     setRound((r) => ({ ...r, correct: r.correct + 1, missed: r.missed.filter((id) => id !== q.phrase.id) }));
-    setAnswer((a) => ({ ...a, correct: true, result: "override" }));
+    setAnswer((a) => (a?.typed != null ? { ...a, correct: true, result: "override" } : a));
   };
 
   const learnIntro = () => {
@@ -147,21 +162,22 @@ export function Drill({ state, update }) {
     advance();
   };
 
-  const flipGrade = (g) => {
+  const flipGrade = (g: Grade) => {
     grade(g, g !== GRADE.again);
     advance();
   };
 
   // キーボード操作（PC で使うとき）
   useEffect(() => {
-    const h = (e) => {
+    const h = (e: KeyboardEvent) => {
       if (!q || finished || e.target instanceof HTMLInputElement) return;
       if (e.target instanceof HTMLButtonElement && (e.key === "Enter" || e.key === " ")) return;
       const n = Number(e.key);
       if ((q.type === "choice" || q.type === "listen") && !answer && n >= 1 && n <= 4) {
         if (q.options[n - 1]) choose(q.options[n - 1]);
       } else if (q.type === "flip" && revealed && n >= 1 && n <= 4) {
-        flipGrade(n - 1);
+        // n は 1〜4 に絞ってある
+        flipGrade((n - 1) as Grade);
       } else if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         if (q.type === "intro") learnIntro();
@@ -314,7 +330,7 @@ export function Drill({ state, update }) {
   );
 }
 
-function Frame({ round, children }) {
+function Frame({ round, children }: { round: Round; children?: ComponentChildren }) {
   return (
     <div class="drill">
       <header class="drill-head">
@@ -340,7 +356,17 @@ function Frame({ round, children }) {
   );
 }
 
-function Prompt({ phrase, rate, kana, autoplay = false }) {
+function Prompt({
+  phrase,
+  rate,
+  kana,
+  autoplay = false,
+}: {
+  phrase: Phrase;
+  rate: number;
+  kana: boolean;
+  autoplay?: boolean;
+}) {
   useEffect(() => {
     if (autoplay) speak(phrase.es, rate);
   }, []);
@@ -352,7 +378,7 @@ function Prompt({ phrase, rate, kana, autoplay = false }) {
   );
 }
 
-function Result({ answer, phrase }) {
+function Result({ answer, phrase }: { answer: Answer; phrase: Phrase }) {
   const chosen = answer.chosen && answer.chosen !== phrase.id ? phraseById.get(answer.chosen) : null;
   return (
     <div class={answer.correct ? "result ok" : "result ng"}>
@@ -363,14 +389,15 @@ function Result({ answer, phrase }) {
   );
 }
 
-function TypedDiff({ answer, phrase }) {
-  const title = {
+function TypedDiff({ answer, phrase }: { answer: TypedAnswer; phrase: Phrase }) {
+  const titles: Record<TypedAnswer["result"], string> = {
     exact: "正解",
     accent: "正解。アクセント記号に気をつけて",
     close: "惜しい。1〜2 文字ちがいます",
     wrong: answer.typed === "" ? "答え" : "不正解",
     override: "正解にしました",
-  }[answer.result];
+  };
+  const title = titles[answer.result];
   const target = answer.matched ?? phrase.es;
   return (
     <div class={answer.correct ? "result ok" : "result ng"}>
@@ -388,7 +415,7 @@ function TypedDiff({ answer, phrase }) {
   );
 }
 
-function ExplainToggle({ phrase, open: initial, onOpen }) {
+function ExplainToggle({ phrase, open: initial, onOpen }: { phrase: Phrase; open: boolean; onOpen: () => void }) {
   const [open, setOpen] = useState(initial);
   return (
     <section class="explain-box">
@@ -409,7 +436,7 @@ function ExplainToggle({ phrase, open: initial, onOpen }) {
   );
 }
 
-function NextButton({ auto, onClick }) {
+function NextButton({ auto, onClick }: { auto: boolean; onClick: () => void }) {
   return (
     <button type="button" class={auto ? "btn primary block next auto" : "btn primary block next"} onClick={onClick}>
       次へ
@@ -418,9 +445,9 @@ function NextButton({ auto, onClick }) {
   );
 }
 
-function Grades({ card, onGrade }) {
+function Grades({ card, onGrade }: { card: Card; onGrade: (g: Grade) => void }) {
   const now = Date.now();
-  const labels = [
+  const labels: [label: string, grade: Grade][] = [
     ["もう一度", GRADE.again],
     ["あやしい", GRADE.hard],
     ["言えた", GRADE.good],
@@ -438,11 +465,11 @@ function Grades({ card, onGrade }) {
   );
 }
 
-function TypeInput({ onSubmit }) {
+function TypeInput({ onSubmit }: { onSubmit: (typed: string) => void }) {
   const [v, setV] = useState("");
-  const ref = useRef(null);
+  const ref = useRef<HTMLInputElement>(null);
   useEffect(() => ref.current?.focus(), []);
-  const insert = (ch) => {
+  const insert = (ch: string) => {
     const el = ref.current;
     const s = el?.selectionStart ?? v.length;
     const e = el?.selectionEnd ?? v.length;
@@ -485,8 +512,8 @@ function TypeInput({ onSubmit }) {
   );
 }
 
-function Summary({ round, settings, onAgain }) {
-  const missed = round.missed.map((id) => phraseById.get(id)).filter(Boolean);
+function Summary({ round, settings, onAgain }: { round: Round; settings: Settings; onAgain: () => void }) {
+  const missed = round.missed.map((id) => phraseById.get(id)).filter((p) => p != null);
   const pct = round.n ? Math.round((round.correct / round.n) * 100) : 0;
   return (
     <div class="drill">

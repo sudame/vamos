@@ -36,6 +36,6 @@ mise run lint    # biome、jactionlint、shellcheck
 mise run build   # dist/ を作る
 ```
 
-- フレーズは `src/data/phrases.json`、文法ノートは `src/data/grammar.json` にある。形は `test/data.test.js` で検査している。
+- フレーズは `src/data/phrases.json`、文法ノートは `src/data/grammar.json` にある。形は `test/data.test.ts` で検査している。
 - アイコンを描き直したら `scripts/make-icons.sh` で PNG を作り直す。Google Chrome が要る。
 - main に push すると `pages.yml` が GitHub Pages に出す。

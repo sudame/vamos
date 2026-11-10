@@ -4,7 +4,7 @@ biome = "2.6.6"
 jactionlint = "2.5.0"
 shellcheck = "0.11.0"
 
-# npm で入れた vite をそのまま呼べるようにする
+# npm で入れた vite と tsc をそのまま呼べるようにする
 [env]
 _.path = ["{{config_root}}/node_modules/.bin"]
 
@@ -28,9 +28,12 @@ run = "vite preview"
 depends = ["build"]
 run = "node --test"
 
+# tsc は node_modules の typescript と型定義を使う
 [tasks.lint]
+depends = ["install"]
 run = [
   "biome check .",
+  "tsc --noEmit",
   "jactionlint",
   "shellcheck scripts/*.sh",
 ]
@@ -42,4 +45,4 @@ run = "scripts/configure-github-repo.sh"
 # フレーズと例文の収録音声を作る。足りない分だけ Google Cloud TTS を呼ぶ。
 # API キーは環境変数 GOOGLE_CLOUD_TTS_API_KEY で渡す
 [tasks.audio]
-run = "node scripts/gen-audio.mjs"
+run = "node scripts/gen-audio.ts"

@@ -5,22 +5,29 @@
 //   pro: 日本語を見てスペイン語が出てくるか
 // pro は rec を一度卒業してから出す。
 
+import type { Card, CardDir, CardPick, CardState, Grade, Mastery, Phrase } from "./types.ts";
+
 export const MINUTE = 60 * 1000;
 export const DAY = 24 * 60 * MINUTE;
 
 export const LEARN_STEPS = [1 * MINUTE, 5 * MINUTE, 15 * MINUTE];
 export const RELEARN_STEPS = [3 * MINUTE, 12 * MINUTE];
 
-export const GRADE = Object.freeze({ again: 0, hard: 1, good: 2, easy: 3 });
+export const GRADE: Readonly<Record<"again" | "hard" | "good" | "easy", Grade>> = Object.freeze({
+  again: 0,
+  hard: 1,
+  good: 2,
+  easy: 3,
+});
 
 const START_EASE = 2.5;
 const MIN_EASE = 1.3;
 
-export function cardId(phraseId, dir) {
+export function cardId(phraseId: string, dir: CardDir): string {
   return `${phraseId}:${dir}`;
 }
 
-export function newCard() {
+export function newCard(): Card {
   return {
     state: "new",
     step: 0,
@@ -32,13 +39,13 @@ export function newCard() {
   };
 }
 
-function stepsFor(state) {
+function stepsFor(state: CardState): number[] {
   return state === "relearning" ? RELEARN_STEPS : LEARN_STEPS;
 }
 
 // grade を受けたあとのカードを返す。interval の単位は日。
-export function schedule(card, grade, now) {
-  const c = { ...card, reps: card.reps + 1, seen: now };
+export function schedule(card: Card, grade: Grade, now: number): Card {
+  const c: Card = { ...card, reps: card.reps + 1, seen: now };
 
   if (c.state === "new" || c.state === "learning" || c.state === "relearning") {
     if (c.state === "new") c.state = "learning";
@@ -92,18 +99,18 @@ export function schedule(card, grade, now) {
   return c;
 }
 
-function graduate(c, intervalDays, now) {
+function graduate(c: Card, intervalDays: number, now: number) {
   c.state = "review";
   c.step = 0;
   c.interval = intervalDays;
   c.due = now + intervalDays * DAY;
 }
 
-export function isLearning(card) {
+export function isLearning(card: Card | null | undefined): boolean {
   return card != null && (card.state === "learning" || card.state === "relearning");
 }
 
-export function isGraduated(card) {
+export function isGraduated(card: Card | null | undefined): boolean {
   return card != null && card.state === "review";
 }
 
@@ -113,12 +120,17 @@ export function isGraduated(card) {
 //   3. それもなければ、期限の早いものを先取りする
 // phrases は出題対象のフレーズ（カテゴリで絞ったあと）を、出す順に並べたもの。
 // avoid に入れた id は、ほかに出せるものがある限り選ばない（直前と同じ問題を避ける）。
-export function pickNext(cards, phrases, now, { maxLearning = 8, avoid = [] } = {}) {
+export function pickNext(
+  cards: Record<string, Card>,
+  phrases: readonly Pick<Phrase, "id">[],
+  now: number,
+  { maxLearning = 8, avoid = [] }: { maxLearning?: number; avoid?: readonly string[] } = {},
+): CardPick | null {
   const avoidSet = new Set(avoid);
-  const started = [];
+  const started: [string, Card][] = [];
   let learningCount = 0;
-  const unlockPro = [];
-  const fresh = [];
+  const unlockPro: string[] = [];
+  const fresh: string[] = [];
 
   for (const p of phrases) {
     const rec = cards[cardId(p.id, "rec")];
@@ -137,7 +149,7 @@ export function pickNext(cards, phrases, now, { maxLearning = 8, avoid = [] } = 
     }
   }
 
-  const byDue = (a, b) => a[1].due - b[1].due;
+  const byDue = (a: [string, Card], b: [string, Card]) => a[1].due - b[1].due;
   const due = started.filter(([, c]) => c.due <= now).sort(byDue);
   const dueOk = due.find(([id]) => !avoidSet.has(id));
   if (dueOk) return { id: dueOk[0], kind: "due" };
@@ -166,13 +178,13 @@ export function pickNext(cards, phrases, now, { maxLearning = 8, avoid = [] } = 
   return null;
 }
 
-export function parseCardId(id) {
+export function parseCardId(id: string): { phraseId: string; dir: string } {
   const i = id.lastIndexOf(":");
   return { phraseId: id.slice(0, i), dir: id.slice(i + 1) };
 }
 
 // フレーズの習熟度。0 未着手、1 覚えかけ、2 意味は分かる、3 言える
-export function masteryOf(cards, phraseId) {
+export function masteryOf(cards: Record<string, Card>, phraseId: string): Mastery {
   const rec = cards[cardId(phraseId, "rec")];
   const pro = cards[cardId(phraseId, "pro")];
   if (isGraduated(pro) || (pro?.state === "relearning" && pro.interval >= 1)) return 3;
@@ -182,11 +194,15 @@ export function masteryOf(cards, phraseId) {
 }
 
 // ホームに出す件数。due は今すぐ復習が要る枚数、fresh はまだ始めていないフレーズ数
-export function summarize(cards, phrases, now) {
+export function summarize(
+  cards: Record<string, Card>,
+  phrases: readonly Pick<Phrase, "id">[],
+  now: number,
+): { due: number; fresh: number } {
   let due = 0;
   let fresh = 0;
   for (const p of phrases) {
-    for (const dir of ["rec", "pro"]) {
+    for (const dir of ["rec", "pro"] as const) {
       const c = cards[cardId(p.id, dir)];
       if (c && c.state !== "new" && c.due <= now) due++;
     }

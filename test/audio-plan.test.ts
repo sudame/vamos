@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { fileFor, genderOf, plan, segmentsFor, VOICES } from "../scripts/audio-plan.mjs";
+import { fileFor, genderOf, plan, segmentsFor, VOICES } from "../scripts/audio-plan.ts";
 
 test("（男性）（女性）の印があれば、その性別の声で読む", () => {
   for (let i = 0; i < 20; i++) {

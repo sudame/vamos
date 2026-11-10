@@ -2,9 +2,10 @@
 import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { test } from "node:test";
+import type { AudioManifest } from "../src/types.ts";
 
 const dist = new URL("../dist/", import.meta.url);
-const read = (p) => readFileSync(new URL(p, dist), "utf8");
+const read = (p: string) => readFileSync(new URL(p, dist), "utf8");
 
 test("dist/ がある（mise run test は build のあとに走る）", () => {
   assert.ok(existsSync(new URL("index.html", dist)));
@@ -27,14 +28,16 @@ test("index.html は /vamos/ 配下のパスを参照し、外部のサーバー
 });
 
 test("manifest はホーム画面に追加できる形になっている", () => {
-  const m = JSON.parse(read("manifest.webmanifest"));
+  const m: { display: string; icons: { src: string; sizes: string; purpose?: string }[] } = JSON.parse(
+    read("manifest.webmanifest"),
+  );
   assert.equal(m.display, "standalone");
   assert.ok(m.icons.some((i) => i.sizes === "512x512" && i.purpose === "maskable"));
   for (const i of m.icons) assert.ok(existsSync(new URL(i.src, dist)), `アイコンが無い: ${i.src}`);
 });
 
 test("収録音声はマニフェストのとおり dist/ にあり、全部 Service Worker が先に保存する", () => {
-  const manifest = JSON.parse(readFileSync(new URL("../src/data/audio.json", import.meta.url), "utf8"));
+  const manifest: AudioManifest = JSON.parse(readFileSync(new URL("../src/data/audio.json", import.meta.url), "utf8"));
   const sw = read("sw.js");
   for (const f of new Set(Object.values(manifest.files))) {
     assert.ok(existsSync(new URL(`audio/${f}`, dist)), `音声が無い: ${f}`);

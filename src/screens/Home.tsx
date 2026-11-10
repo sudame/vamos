@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "preact/hooks";
-import { CATEGORIES, CATEGORY_IDS } from "../categories.js";
-import { Icon, TabBar } from "../components/ui.jsx";
-import { eligiblePhrases, PHRASES } from "../data.js";
-import { offlineStatus, onOfflineStatus } from "../offline.js";
-import { canSpeak, onVoicesChanged, recordedCount, spanishVoices } from "../speech.js";
-import { masteryOf, summarize } from "../srs.js";
-import { dayKey, streak } from "../storage.js";
+import { CATEGORIES, CATEGORY_IDS } from "../categories.ts";
+import { Icon, TabBar } from "../components/ui.tsx";
+import { eligiblePhrases, PHRASES } from "../data.ts";
+import { offlineStatus, onOfflineStatus } from "../offline.ts";
+import { canSpeak, onVoicesChanged, recordedCount, spanishVoices } from "../speech.ts";
+import { masteryOf, summarize } from "../srs.ts";
+import { dayKey, streak } from "../storage.ts";
+import type { Mastery, OfflineStatus, ScreenProps } from "../types.ts";
 
 function useOffline() {
   const [s, setS] = useState(offlineStatus);
@@ -26,14 +27,14 @@ function useVoiceCount() {
   return n;
 }
 
-const LEVELS = [
+const LEVELS: [Mastery, string][] = [
   [3, "言える"],
   [2, "分かる"],
   [1, "覚えかけ"],
   [0, "まだ"],
 ];
 
-export function Home({ state, update }) {
+export function Home({ state, update }: ScreenProps) {
   const offline = useOffline();
   const voices = useVoiceCount();
   const now = Date.now();
@@ -46,9 +47,11 @@ export function Home({ state, update }) {
     const perCat = new Map(CATEGORIES.map((c) => [c.id, { total: 0, say: 0 }]));
     const counts = [0, 0, 0, 0];
     for (const p of PHRASES) {
-      const l = levels.get(p.id);
+      // levels は PHRASES から作り、フレーズのカテゴリは test/data.test.ts で既知のものに限っているので、どちらも必ず引ける
+      const l = levels.get(p.id) ?? 0;
       counts[l]++;
       const s = perCat.get(p.cat);
+      if (!s) continue;
       s.total++;
       if (l >= 3) s.say++;
     }
@@ -58,7 +61,7 @@ export function Home({ state, update }) {
   const pool = useMemo(() => eligiblePhrases(state.settings), [state.settings]);
   const { due, fresh } = summarize(state.cards, pool, now);
 
-  const toggle = (id) => {
+  const toggle = (id: string) => {
     update((s) => {
       const cur = new Set(s.settings.cats ?? CATEGORY_IDS);
       if (cur.has(id)) cur.delete(id);
@@ -68,9 +71,9 @@ export function Home({ state, update }) {
     });
   };
   const allOn = selected.length === CATEGORY_IDS.length;
-  const setAll = (on) => update((s) => ({ ...s, settings: { ...s.settings, cats: on ? null : [] } }));
+  const setAll = (on: boolean) => update((s) => ({ ...s, settings: { ...s.settings, cats: on ? null : [] } }));
 
-  let lead;
+  let lead: string;
   if (pool.length === 0) lead = "下でカテゴリを選ぶと始められます。";
   else if (due > 0) lead = `復習が ${due} 枚たまっています。`;
   else if (fresh > 0) lead = `まだ見ていないフレーズが ${fresh} 件あります。`;
@@ -134,7 +137,7 @@ export function Home({ state, update }) {
           </div>
           <ul class="rows">
             {CATEGORIES.map((c) => {
-              const s = perCat.get(c.id);
+              const s = perCat.get(c.id) ?? { total: 0, say: 0 };
               const on = selected.includes(c.id);
               return (
                 <li key={c.id}>
@@ -166,9 +169,9 @@ export function Home({ state, update }) {
 }
 
 // 機内で困らないかの確認。問題がなければ 1 行で済ませる
-function Readiness({ offline, voices, useRecorded }) {
+function Readiness({ offline, voices, useRecorded }: { offline: OfflineStatus; voices: number; useRecorded: boolean }) {
   const recorded = useRecorded && recordedCount() > 0;
-  const problems = [];
+  const problems: string[] = [];
   if (offline === "checking") problems.push("オフライン用にデータを保存しています。");
   else if (offline !== "ready") problems.push("このブラウザではオフライン用に保存できません。");
   if (!recorded && (!canSpeak() || voices === 0)) problems.push("スペイン語の音声がありません。");

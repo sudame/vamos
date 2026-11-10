@@ -8,8 +8,9 @@
 
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
+import type { AudioPlanEntry, AudioSegment, Grammar, Phrase } from "../src/types.ts";
 
-export const VOICES = {
+export const VOICES: { female: string[]; male: string[] } = {
   female: ["es-ES-Chirp3-HD-Aoede", "es-ES-Chirp3-HD-Kore"],
   male: ["es-ES-Chirp3-HD-Charon", "es-ES-Chirp3-HD-Puck"],
 };
@@ -18,19 +19,19 @@ const ALL = [...VOICES.male, ...VOICES.female];
 const MALE_TAG = /（(男性|男性が言う|男性が)）/;
 const FEMALE_TAG = /（(女性|女性が言う|女性が)）/;
 
-function hash(s) {
+function hash(s: string): Buffer {
   return createHash("sha256").update(s).digest();
 }
 
-function pick(list, seed) {
+function pick(list: string[], seed: string): string {
   return list[hash(seed).readUInt32BE(0) % list.length];
 }
 
-export function genderOf(voice) {
+export function genderOf(voice: string): "male" | "female" {
   return VOICES.male.includes(voice) ? "male" : "female";
 }
 
-export function segmentsFor(es, ja = "") {
+export function segmentsFor(es: string, ja = ""): AudioSegment[] {
   const dialog = es.split(/\s*[―—]\s*/).filter(Boolean);
   if (dialog.length > 1) {
     const first = pick(ALL, es);
@@ -51,18 +52,19 @@ export function segmentsFor(es, ja = "") {
   return [{ text: es, voice: pick(list, es) }];
 }
 
-export function fileFor(segments) {
+export function fileFor(segments: AudioSegment[]): string {
   const key = segments.map((s) => `${s.voice}\n${s.text}`).join("\n\n");
   return `${hash(key).toString("hex").slice(0, 16)}.mp3`;
 }
 
 // 音声にする文を集める。同じ文は最初に出てきたものの訳で話し手を決める
-export function plan(root) {
-  const read = (p) => JSON.parse(readFileSync(new URL(p, root), "utf8"));
-  const items = [];
-  for (const p of read("src/data/phrases.json")) items.push({ es: p.es, ja: p.ja });
-  for (const g of read("src/data/grammar.json")) for (const s of g.swap ?? []) items.push({ es: s.es, ja: s.ja });
-  const out = new Map();
+export function plan(root: URL): Map<string, AudioPlanEntry> {
+  const read = <T>(p: string): T => JSON.parse(readFileSync(new URL(p, root), "utf8"));
+  const items: { es: string; ja: string }[] = [];
+  for (const p of read<Phrase[]>("src/data/phrases.json")) items.push({ es: p.es, ja: p.ja });
+  for (const g of read<Grammar[]>("src/data/grammar.json"))
+    for (const s of g.swap ?? []) items.push({ es: s.es, ja: s.ja });
+  const out = new Map<string, AudioPlanEntry>();
   for (const it of items) {
     if (out.has(it.es)) continue;
     const segments = segmentsFor(it.es, it.ja);
