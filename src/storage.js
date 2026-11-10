@@ -6,6 +6,8 @@ export const DEFAULT_SETTINGS = Object.freeze({
   cats: null, // null はすべてのカテゴリ
   produceMode: "flip", // flip: めくって自己採点 / type: 打ち込む
   autoSpeak: true,
+  autoNext: true, // 正解したら少し待って次の問題へ
+  useRecorded: true, // 同梱の収録音声を使う。false なら端末の音声合成
   rate: 0.9,
   showKana: true,
   listenQuiz: true,
@@ -13,19 +15,43 @@ export const DEFAULT_SETTINGS = Object.freeze({
 });
 
 export function emptyState() {
-  return { cards: {}, days: {}, settings: { ...DEFAULT_SETTINGS }, starred: {} };
+  return { cards: {}, days: {}, settings: { ...DEFAULT_SETTINGS } };
+}
+
+const isObj = (v) => v != null && typeof v === "object" && !Array.isArray(v);
+
+function validSetting(key, v) {
+  if (key === "cats") return v === null || (Array.isArray(v) && v.every((c) => typeof c === "string"));
+  return typeof v === typeof DEFAULT_SETTINGS[key];
 }
 
 export function migrate(raw) {
   const s = emptyState();
-  if (raw == null || typeof raw !== "object") return s;
-  if (raw.cards && typeof raw.cards === "object") s.cards = raw.cards;
-  if (raw.days && typeof raw.days === "object") s.days = raw.days;
-  if (raw.starred && typeof raw.starred === "object") s.starred = raw.starred;
-  if (raw.settings && typeof raw.settings === "object") {
-    s.settings = { ...DEFAULT_SETTINGS, ...raw.settings };
+  if (!isObj(raw)) return s;
+  if (isObj(raw.cards)) {
+    for (const [id, c] of Object.entries(raw.cards)) {
+      if (isObj(c) && typeof c.state === "string" && Number.isFinite(c.due)) s.cards[id] = c;
+    }
+  }
+  if (isObj(raw.days)) s.days = raw.days;
+  if (isObj(raw.settings)) {
+    for (const k of Object.keys(DEFAULT_SETTINGS)) {
+      if (k in raw.settings && validSetting(k, raw.settings[k])) s.settings[k] = raw.settings[k];
+    }
   }
   return s;
+}
+
+// 書き出したファイルを読み込むとき用。記録らしくなければ null
+export function parseBackup(text) {
+  let raw;
+  try {
+    raw = JSON.parse(text);
+  } catch {
+    return null;
+  }
+  if (!isObj(raw) || !isObj(raw.cards)) return null;
+  return migrate(raw);
 }
 
 export function load() {

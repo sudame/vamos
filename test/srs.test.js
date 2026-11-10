@@ -1,6 +1,17 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { cardId, DAY, GRADE, LEARN_STEPS, MINUTE, masteryOf, newCard, pickNext, schedule } from "../src/srs.js";
+import {
+  cardId,
+  DAY,
+  GRADE,
+  LEARN_STEPS,
+  MINUTE,
+  masteryOf,
+  newCard,
+  pickNext,
+  schedule,
+  summarize,
+} from "../src/srs.js";
 
 const T0 = 1_800_000_000_000;
 
@@ -126,4 +137,39 @@ test("masteryOf は rec と pro の卒業で段階が上がる", () => {
     ),
     3,
   );
+});
+
+test("先取りの答えでは ease が変わらない", () => {
+  const before = { ...newCard(), state: "review", interval: 4, due: T0 + 4 * DAY };
+  assert.equal(schedule(before, GRADE.easy, T0).ease, before.ease);
+  assert.equal(schedule(before, GRADE.hard, T0).ease, before.ease);
+});
+
+test("全部卒業したあとの先取りは、すべてのカードを順に回す", () => {
+  const phrases = Array.from({ length: 10 }, (_, i) => ({ id: `p${i}` }));
+  let cards = {};
+  for (const p of phrases) {
+    cards[`${p.id}:rec`] = { ...newCard(), state: "review", interval: 3, due: T0 + 3 * DAY };
+    cards[`${p.id}:pro`] = { ...newCard(), state: "review", interval: 3, due: T0 + 3 * DAY };
+  }
+  const shown = new Set();
+  const recent = [];
+  let now = T0;
+  for (let i = 0; i < 40; i++) {
+    const pick = pickNext(cards, phrases, now, { avoid: recent });
+    shown.add(pick.id);
+    recent.unshift(pick.id);
+    recent.length = Math.min(recent.length, 2);
+    cards = { ...cards, [pick.id]: schedule(cards[pick.id], GRADE.good, now) };
+    now += 10_000;
+  }
+  assert.equal(shown.size, 20);
+});
+
+test("summarize は期限の来たカードとまだ始めていないフレーズを数える", () => {
+  const cards = {
+    "a:rec": { ...newCard(), state: "review", interval: 1, due: T0 - 1 },
+    "a:pro": { ...newCard(), state: "learning", due: T0 + MINUTE },
+  };
+  assert.deepEqual(summarize(cards, P, T0), { due: 1, fresh: 2 });
 });

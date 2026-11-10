@@ -39,7 +39,7 @@ export function levenshtein(a, b) {
 // 結果:
 //   exact  完全に合っている
 //   accent アクセント記号だけ違う
-//   close  1〜2 文字の打ち間違い
+//   close  1〜2 文字だけ違う。打ち間違いか、別の語（junio と julio など）かは区別できないので、正解には数えない
 //   wrong  違う
 // matched は一番近かった正解
 export function check(input, answers) {
@@ -59,7 +59,8 @@ export function check(input, answers) {
       continue;
     }
     const d = Math.min(levenshtein(inF, aF), levenshtein(withoutPorFavor(inF), withoutPorFavor(aF)));
-    const limit = aF.length <= 4 ? 0 : aF.length <= 12 ? 1 : 2;
+    const len = withoutPorFavor(aF).length;
+    const limit = len <= 4 ? 0 : len <= 12 ? 1 : 2;
     if (d <= limit && best.result !== "accent" && d < best.dist) {
       best = { result: "close", matched: ans, dist: d };
     }

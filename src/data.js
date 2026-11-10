@@ -15,3 +15,9 @@ for (const p of PHRASES) {
     phrasesByGrammar.get(g).push(p);
   }
 }
+
+// 設定で選んだカテゴリのフレーズ
+export function eligiblePhrases(settings) {
+  const cats = settings.cats;
+  return cats == null ? PHRASES : PHRASES.filter((p) => cats.includes(p.cat));
+}

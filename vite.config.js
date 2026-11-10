@@ -19,8 +19,8 @@ export default defineConfig({
         scope: "./",
         display: "standalone",
         orientation: "portrait",
-        background_color: "#fbf4e8",
-        theme_color: "#b3261e",
+        background_color: "#f2f4f6",
+        theme_color: "#14212e",
         icons: [
           { src: "icon-192.png", sizes: "192x192", type: "image/png" },
           { src: "icon-512.png", sizes: "512x512", type: "image/png" },
@@ -29,7 +29,7 @@ export default defineConfig({
       },
       workbox: {
         // 画面もデータも全部先に保存しておき、機内ではネットに一切出ない
-        globPatterns: ["**/*.{js,css,html,svg,png,json,webmanifest}"],
+        globPatterns: ["**/*.{js,css,html,svg,png,json,webmanifest,mp3,woff2}"],
         navigateFallback: "index.html",
         cleanupOutdatedCaches: true,
       },

@@ -60,3 +60,12 @@ test("文法ノートの id は一意で、本文のブロックは既知の形"
     }
   }
 });
+
+test("収録音声のマニフェストは、今のフレーズと例文の文だけを持つ", () => {
+  const audio = read("../src/data/audio.json");
+  const texts = new Set([...phrases.map((p) => p.es), ...grammar.flatMap((g) => (g.swap ?? []).map((s) => s.es))]);
+  for (const t of Object.keys(audio.files)) assert.ok(texts.has(t), `使われていない音声: ${t}`);
+  if (Object.keys(audio.files).length > 0) {
+    for (const t of texts) assert.ok(t in audio.files, `音声が無い: ${t}`);
+  }
+});

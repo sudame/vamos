@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "preact/hooks";
 import { CATEGORIES, CATEGORY_IDS } from "../categories.js";
-import { PHRASES } from "../data.js";
+import { Icon, TabBar } from "../components/ui.jsx";
+import { eligiblePhrases, PHRASES } from "../data.js";
 import { offlineStatus, onOfflineStatus } from "../offline.js";
-import { canSpeak, onVoicesChanged, spanishVoices } from "../speech.js";
-import { masteryOf } from "../srs.js";
+import { canSpeak, onVoicesChanged, recordedCount, spanishVoices } from "../speech.js";
+import { masteryOf, summarize } from "../srs.js";
 import { dayKey, streak } from "../storage.js";
 
 function useOffline() {
@@ -16,7 +17,6 @@ function useVoiceCount() {
   const [n, setN] = useState(() => spanishVoices().length);
   useEffect(() => {
     const off = onVoicesChanged(() => setN(spanishVoices().length));
-    // 一部のブラウザは voiceschanged を出さないので、少し待ってから数え直す
     const t = setTimeout(() => setN(spanishVoices().length), 1000);
     return () => {
       off();
@@ -26,32 +26,37 @@ function useVoiceCount() {
   return n;
 }
 
+const LEVELS = [
+  [3, "言える"],
+  [2, "分かる"],
+  [1, "覚えかけ"],
+  [0, "まだ"],
+];
+
 export function Home({ state, update }) {
   const offline = useOffline();
   const voices = useVoiceCount();
   const now = Date.now();
   const today = state.days[dayKey(now)] ?? { answered: 0, correct: 0 };
   const selected = state.settings.cats ?? CATEGORY_IDS;
+  const days = streak(state.days, now);
 
-  const stats = useMemo(() => {
-    const per = new Map(CATEGORIES.map((c) => [c.id, { total: 0, seen: 0, know: 0, say: 0 }]));
+  const { levels, perCat, counts } = useMemo(() => {
+    const levels = new Map(PHRASES.map((p) => [p.id, masteryOf(state.cards, p.id)]));
+    const perCat = new Map(CATEGORIES.map((c) => [c.id, { total: 0, say: 0 }]));
+    const counts = [0, 0, 0, 0];
     for (const p of PHRASES) {
-      const m = masteryOf(state.cards, p.id);
-      const s = per.get(p.cat);
-      if (!s) continue;
+      const l = levels.get(p.id);
+      counts[l]++;
+      const s = perCat.get(p.cat);
       s.total++;
-      if (m >= 1) s.seen++;
-      if (m >= 2) s.know++;
-      if (m >= 3) s.say++;
+      if (l >= 3) s.say++;
     }
-    let say = 0;
-    let know = 0;
-    for (const s of per.values()) {
-      say += s.say;
-      know += s.know;
-    }
-    return { per, say, know };
+    return { levels, perCat, counts };
   }, [state.cards]);
+
+  const pool = useMemo(() => eligiblePhrases(state.settings), [state.settings]);
+  const { due, fresh } = summarize(state.cards, pool, now);
 
   const toggle = (id) => {
     update((s) => {
@@ -62,131 +67,123 @@ export function Home({ state, update }) {
       return { ...s, settings: { ...s.settings, cats: cats.length === CATEGORY_IDS.length ? null : cats } };
     });
   };
+  const allOn = selected.length === CATEGORY_IDS.length;
   const setAll = (on) => update((s) => ({ ...s, settings: { ...s.settings, cats: on ? null : [] } }));
 
+  let lead;
+  if (pool.length === 0) lead = "下でカテゴリを選ぶと始められます。";
+  else if (due > 0) lead = `復習が ${due} 枚たまっています。`;
+  else if (fresh > 0) lead = `まだ見ていないフレーズが ${fresh} 件あります。`;
+  else lead = "選んだフレーズはひととおり覚えました。先取りで復習できます。";
+
   return (
-    <div class="home">
-      <header class="hero">
-        <div class="hero-tiles" aria-hidden="true" />
-        <h1 class="logo">
-          ¡Vamos<span class="logo-bang">!</span>
-        </h1>
-        <p class="tagline">機内でひたすら覚える、旅のスペイン語</p>
+    <div class="screen">
+      <header class="home-head">
+        <p class="wordmark" lang="es">
+          ¡Vamos!
+        </p>
+        <p class="home-meta">
+          {days > 0 ? `${days} 日連続` : "今日から"}
+          <span class="sep" aria-hidden="true" />
+          今日 {today.answered} 問
+        </p>
       </header>
 
-      <main class="home-main">
-        <Status offline={offline} voices={voices} />
-
-        <section class="statrow" aria-label="記録">
-          <div class="stat">
-            <b>{today.answered}</b>
-            <span>今日の問題</span>
-          </div>
-          <div class="stat">
-            <b>{streak(state.days, now)}</b>
-            <span>連続日数</span>
-          </div>
-          <div class="stat">
-            <b>{stats.know}</b>
-            <span>分かる</span>
-          </div>
-          <div class="stat">
-            <b>{stats.say}</b>
-            <span>言える</span>
-          </div>
+      <main class="screen-body">
+        <section class="progress" aria-label="覚えた具合">
+          <a class="mosaic" href="#/browse" aria-label="フレーズ一覧を開く">
+            {CATEGORIES.map((c) => (
+              <span key={c.id} class={selected.includes(c.id) ? "mosaic-row" : "mosaic-row off"}>
+                {PHRASES.filter((p) => p.cat === c.id).map((p) => (
+                  <span key={p.id} class={`cell l${levels.get(p.id)}`} />
+                ))}
+              </span>
+            ))}
+          </a>
+          <ul class="legend">
+            {LEVELS.map(([l, label]) => (
+              <li key={l}>
+                <span class={`cell l${l}`} aria-hidden="true" />
+                {label}
+                <b>{counts[l]}</b>
+              </li>
+            ))}
+          </ul>
         </section>
 
-        <a class="btn btn-primary btn-start" href="#/drill">
-          ¡Empezamos! <small>はじめる</small>
-        </a>
+        <section class="start">
+          <p class="start-lead">{lead}</p>
+          {pool.length === 0 ? (
+            <span class="btn primary block disabled" aria-disabled="true">
+              始める
+            </span>
+          ) : (
+            <a class="btn primary block" href="#/drill">
+              {today.answered > 0 ? "続ける" : "始める"}
+            </a>
+          )}
+          <Readiness offline={offline} voices={voices} useRecorded={state.settings.useRecorded} />
+        </section>
 
-        <section class="cats">
-          <div class="cats-head">
+        <section>
+          <div class="section-head">
             <h2>出題するカテゴリ</h2>
-            <div class="cats-all">
-              <button type="button" class="link" onClick={() => setAll(true)}>
-                全部
-              </button>
-              <button type="button" class="link" onClick={() => setAll(false)}>
-                解除
-              </button>
-            </div>
+            <button type="button" class="text-btn" onClick={() => setAll(!allOn)}>
+              {allOn ? "すべて外す" : "すべて選ぶ"}
+            </button>
           </div>
-          <ul class="cat-list">
+          <ul class="rows">
             {CATEGORIES.map((c) => {
-              const s = stats.per.get(c.id);
+              const s = perCat.get(c.id);
               const on = selected.includes(c.id);
               return (
                 <li key={c.id}>
-                  <button type="button" class={on ? "cat on" : "cat"} aria-pressed={on} onClick={() => toggle(c.id)}>
-                    <span class="cat-icon">{c.icon}</span>
-                    <span class="cat-name">
-                      {c.ja}
-                      <small lang="es">{c.es}</small>
+                  <button type="button" class="row check-row" aria-pressed={on} onClick={() => toggle(c.id)}>
+                    <span class="row-main">
+                      <span class="row-title">{c.ja}</span>
+                      <span class="row-sub" lang="es">
+                        {c.es}
+                      </span>
                     </span>
-                    <span class="cat-count">
-                      {s.say}/{s.total}
+                    <span class="row-count">
+                      {s.say}
+                      <small>/{s.total}</small>
                     </span>
-                    <span class="bar" aria-hidden="true">
-                      <span class="bar-seen" style={{ width: `${pct(s.seen, s.total)}%` }} />
-                      <span class="bar-know" style={{ width: `${pct(s.know, s.total)}%` }} />
-                      <span class="bar-say" style={{ width: `${pct(s.say, s.total)}%` }} />
+                    <span class="checkbox" aria-hidden="true">
+                      {on && <Icon name="check" size={16} />}
                     </span>
                   </button>
                 </li>
               );
             })}
           </ul>
-          <p class="legend small">
-            <span class="lg lg-seen" />
-            覚えかけ <span class="lg lg-know" />
-            分かる <span class="lg lg-say" />
-            言える（数字は言える数）
-          </p>
+          <p class="note">数字は「言える」になったフレーズの数です。</p>
         </section>
-
-        <nav class="menu">
-          <a href="#/browse">
-            <span>📖</span>フレーズ一覧
-          </a>
-          <a href="#/grammar">
-            <span>🧩</span>文法ノート
-          </a>
-          <a href="#/settings">
-            <span>⚙️</span>設定
-          </a>
-        </nav>
       </main>
+      <TabBar current="" />
     </div>
   );
 }
 
-function pct(n, d) {
-  return d ? (n / d) * 100 : 0;
-}
+// 機内で困らないかの確認。問題がなければ 1 行で済ませる
+function Readiness({ offline, voices, useRecorded }) {
+  const recorded = useRecorded && recordedCount() > 0;
+  const problems = [];
+  if (offline === "checking") problems.push("オフライン用にデータを保存しています。");
+  else if (offline !== "ready") problems.push("このブラウザではオフライン用に保存できません。");
+  if (!recorded && (!canSpeak() || voices === 0)) problems.push("スペイン語の音声がありません。");
 
-function Status({ offline, voices }) {
-  const items = [];
-  if (offline === "ready") items.push(["ok", "オフラインで使えます"]);
-  else if (offline === "checking") items.push(["wait", "オフライン用に保存しています…"]);
-  else items.push(["ng", "このブラウザではオフライン用に保存できません"]);
-
-  if (!canSpeak()) items.push(["ng", "このブラウザは読み上げに対応していません"]);
-  else if (voices === 0) items.push(["ng", "スペイン語の音声が見つかりません（設定を確認）"]);
-  else items.push(["ok", `スペイン語の音声 ${voices} 件`]);
-
+  if (problems.length === 0) {
+    return (
+      <p class="ready ok">
+        <Icon name="check" size={16} />
+        機内モードでも使えます
+      </p>
+    );
+  }
   return (
-    <ul class="status">
-      {items.map(([k, t]) => (
-        <li key={t} class={`st st-${k}`}>
-          {t}
-        </li>
-      ))}
-      {(offline !== "ready" || voices === 0) && (
-        <li class="st-more">
-          <a href="#/settings">機内に入る前の準備 →</a>
-        </li>
-      )}
-    </ul>
+    <p class="ready">
+      {problems.join(" ")} <a href="#/settings">準備のしかた</a>
+    </p>
   );
 }

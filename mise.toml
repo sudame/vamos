@@ -38,3 +38,8 @@ run = [
 # 自動マージと main の必須チェックを GitHub に設定する
 [tasks.github-settings]
 run = "scripts/configure-github-repo.sh"
+
+# フレーズと例文の収録音声を作る。足りない分だけ Google Cloud TTS を呼ぶ。
+# API キーは環境変数 GOOGLE_CLOUD_TTS_API_KEY で渡す
+[tasks.audio]
+run = "node scripts/gen-audio.mjs"

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "preact/hooks";
 import { fold } from "../answer.js";
-import { CATEGORIES, categoryById } from "../categories.js";
-import { CatTag, Explain, MasteryDots, SpeakButton, TopBar } from "../components/ui.jsx";
+import { CATEGORIES } from "../categories.js";
+import { Explain, Icon, Level, Screen, Spanish } from "../components/ui.jsx";
 import { PHRASES } from "../data.js";
 import { masteryOf } from "../srs.js";
 
@@ -16,75 +16,93 @@ function matches(p, q) {
   );
 }
 
-export function Browse({ state, cat }) {
+export function Browse({ state, cat: initialCat }) {
   const [query, setQuery] = useState("");
+  const [cat, setCat] = useState(initialCat || "");
   const [open, setOpen] = useState(null);
-  const list = useMemo(() => PHRASES.filter((p) => (!cat || p.cat === cat) && matches(p, query.trim())), [cat, query]);
-  const title = cat ? (categoryById.get(cat)?.ja ?? "フレーズ") : "フレーズ一覧";
+  const q = query.trim();
+  const list = useMemo(() => PHRASES.filter((p) => (!cat || p.cat === cat) && matches(p, q)), [cat, q]);
+
   return (
-    <div class="page">
-      <TopBar title={title} backTo={cat ? "browse" : ""} />
-      <main class="page-main">
+    <Screen tab="browse" title="フレーズ">
+      <div class="browse-tools">
         <input
           class="search"
           type="search"
           value={query}
           onInput={(e) => setQuery(e.currentTarget.value)}
-          placeholder="スペイン語・日本語で探す"
+          placeholder="スペイン語か日本語で探す"
           aria-label="フレーズを探す"
         />
-        {!cat && !query && (
-          <ul class="chips">
-            {CATEGORIES.map((c) => (
-              <li key={c.id}>
-                <a class="chip" href={`#/browse/${c.id}`}>
-                  {c.icon} {c.ja}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-        <p class="small">{list.length} 件</p>
-        <ul class="plist">
+        <div class="chips" role="radiogroup" aria-label="カテゴリ">
+          {[{ id: "", ja: "すべて" }, ...CATEGORIES].map((c) => (
+            <label key={c.id} class="chip">
+              <input type="radio" name="browse-cat" checked={cat === c.id} onChange={() => setCat(c.id)} />
+              <span>{c.ja}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {list.length === 0 ? (
+        <p class="empty">「{q}」に当たるフレーズはありません。</p>
+      ) : (
+        <ul class="rows">
           {list.map((p) => (
-            <li key={p.id} class={open === p.id ? "pitem open" : "pitem"}>
-              <button type="button" class="pitem-head" onClick={() => setOpen(open === p.id ? null : p.id)}>
-                <span class="pitem-es" lang="es">
-                  {p.es}
-                </span>
-                <span class="pitem-ja">{p.ja}</span>
-                <MasteryDots level={masteryOf(state.cards, p.id)} />
-              </button>
-              {open === p.id && (
-                <div class="pitem-body">
-                  <div class="face-sub">
-                    {p.kana && <span class="kana">{p.kana}</span>}
-                    <SpeakButton text={p.es} rate={state.settings.rate} />
-                  </div>
-                  {!cat && <CatTag cat={p.cat} />}
-                  <Explain phrase={p} />
-                </div>
-              )}
-            </li>
+            <PhraseRow
+              key={p.id}
+              phrase={p}
+              state={state}
+              open={open === p.id}
+              onToggle={() => setOpen(open === p.id ? null : p.id)}
+            />
           ))}
         </ul>
-      </main>
-    </div>
+      )}
+    </Screen>
   );
 }
 
+function PhraseRow({ phrase: p, state, open, onToggle }) {
+  const rate = state.settings.rate;
+  return (
+    <li class={open ? "phrase open" : "phrase"}>
+      <div class="row phrase-row">
+        <span class="row-main">
+          <Spanish text={p.es} rate={rate} class="row-es" />
+          <span class="row-sub">{p.ja}</span>
+        </span>
+        <Level level={masteryOf(state.cards, p.id)} />
+        <button type="button" class="icon-btn expand" aria-expanded={open} aria-label="解説" onClick={onToggle}>
+          <Icon name="chevron" size={18} />
+        </button>
+      </div>
+      {open && (
+        <div class="phrase-detail">
+          {p.kana && <p class="kana">{p.kana}</p>}
+          {p.alt?.length > 0 && (
+            <p class="note">
+              別の言い方 <span lang="es">{p.alt.join(" / ")}</span>
+            </p>
+          )}
+          <Explain phrase={p} />
+        </div>
+      )}
+    </li>
+  );
+}
+
+// 文法ノートから使うフレーズの一覧
 export function PhraseList({ phrases, state }) {
   return (
-    <ul class="plist compact">
+    <ul class="rows">
       {phrases.map((p) => (
-        <li key={p.id} class="pitem">
-          <a class="pitem-head" href={`#/phrase/${p.id}`}>
-            <span class="pitem-es" lang="es">
-              {p.es}
-            </span>
-            <span class="pitem-ja">{p.ja}</span>
-            <MasteryDots level={masteryOf(state.cards, p.id)} />
-          </a>
+        <li key={p.id} class="row phrase-row">
+          <span class="row-main">
+            <Spanish text={p.es} rate={state.settings.rate} class="row-es" />
+            <span class="row-sub">{p.ja}</span>
+          </span>
+          <Level level={masteryOf(state.cards, p.id)} />
         </li>
       ))}
     </ul>

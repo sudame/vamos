@@ -54,3 +54,8 @@ test("diffMarks は省いた por favor を責めない", () => {
     ["ñ"],
   );
 });
+
+test("1 文字違いで別の語になるものは正解にならない（close は正解に数えない側）", () => {
+  assert.equal(check("julio", ["junio"]).result, "close");
+  assert.equal(check("ocho", ["Otra, por favor."]).result, "wrong");
+});

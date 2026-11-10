@@ -38,7 +38,7 @@ function stepsFor(state) {
 
 // grade を受けたあとのカードを返す。interval の単位は日。
 export function schedule(card, grade, now) {
-  const c = { ...card, reps: card.reps + 1 };
+  const c = { ...card, reps: card.reps + 1, seen: now };
 
   if (c.state === "new" || c.state === "learning" || c.state === "relearning") {
     if (c.state === "new") c.state = "learning";
@@ -74,9 +74,8 @@ export function schedule(card, grade, now) {
     c.due = now + RELEARN_STEPS[0];
     return c;
   }
+  // ease も動かさない。先取りは何度でも回せるので、動かすと ease が際限なく上下する
   if (early) {
-    if (grade === GRADE.hard) c.ease = Math.max(MIN_EASE, c.ease - 0.15);
-    if (grade === GRADE.easy) c.ease += 0.15;
     c.due = Math.max(c.due, now + c.interval * DAY * 0.5);
     return c;
   }
@@ -148,11 +147,14 @@ export function pickNext(cards, phrases, now, { maxLearning = 8, avoid = [] } = 
     if (n) return { id: n, kind: "new" };
   }
 
+  // 覚えかけを期限の早い順に先に、そのあと卒業したカードを長く出していない順に。
+  // 先取りでは期限がほとんど動かないので、期限の順にすると同じ数枚だけが回り続ける
   const ahead = [...started].sort((a, b) => {
-    // 覚えかけを先に、そのあと期限の早い順
     const la = isLearning(a[1]) ? 0 : 1;
     const lb = isLearning(b[1]) ? 0 : 1;
-    return la - lb || a[1].due - b[1].due;
+    if (la !== lb) return la - lb;
+    if (la === 0) return a[1].due - b[1].due;
+    return (a[1].seen ?? 0) - (b[1].seen ?? 0) || a[1].due - b[1].due;
   });
   const aheadOk = ahead.find(([id]) => !avoidSet.has(id));
   if (aheadOk) return { id: aheadOk[0], kind: "ahead" };
@@ -177,4 +179,19 @@ export function masteryOf(cards, phraseId) {
   if (isGraduated(rec) || (rec?.state === "relearning" && rec.interval >= 1)) return 2;
   if (rec != null && rec.state !== "new") return 1;
   return 0;
+}
+
+// ホームに出す件数。due は今すぐ復習が要る枚数、fresh はまだ始めていないフレーズ数
+export function summarize(cards, phrases, now) {
+  let due = 0;
+  let fresh = 0;
+  for (const p of phrases) {
+    for (const dir of ["rec", "pro"]) {
+      const c = cards[cardId(p.id, dir)];
+      if (c && c.state !== "new" && c.due <= now) due++;
+    }
+    const rec = cards[cardId(p.id, "rec")];
+    if (rec == null || rec.state === "new") fresh++;
+  }
+  return { due, fresh };
 }

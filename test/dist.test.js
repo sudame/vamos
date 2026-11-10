@@ -32,3 +32,12 @@ test("manifest はホーム画面に追加できる形になっている", () =>
   assert.ok(m.icons.some((i) => i.sizes === "512x512" && i.purpose === "maskable"));
   for (const i of m.icons) assert.ok(existsSync(new URL(i.src, dist)), `アイコンが無い: ${i.src}`);
 });
+
+test("収録音声はマニフェストのとおり dist/ にあり、全部 Service Worker が先に保存する", () => {
+  const manifest = JSON.parse(readFileSync(new URL("../src/data/audio.json", import.meta.url), "utf8"));
+  const sw = read("sw.js");
+  for (const f of new Set(Object.values(manifest.files))) {
+    assert.ok(existsSync(new URL(`audio/${f}`, dist)), `音声が無い: ${f}`);
+    assert.ok(sw.includes(`audio/${f}`), `precache に無い: audio/${f}`);
+  }
+});

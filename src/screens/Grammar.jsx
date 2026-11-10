@@ -1,104 +1,104 @@
-import { useMemo } from "preact/hooks";
-import { SpeakButton, TopBar } from "../components/ui.jsx";
+import { useState } from "preact/hooks";
+import { Icon, Screen, Spanish } from "../components/ui.jsx";
 import { GRAMMAR, grammarById, phrasesByGrammar } from "../data.js";
 import { masteryOf } from "../srs.js";
 import { PhraseList } from "./Browse.jsx";
 
+const SHOW_RELATED = 6;
+
 export function GrammarList({ state }) {
   return (
-    <div class="page">
-      <TopBar title="文法ノート" />
-      <main class="page-main">
-        <p class="lead">
-          フレーズを丸暗記するだけでなく、型を知って単語を入れ替えれば言えることが増えます。
-          ドリルの解説からもここに飛べます。
-        </p>
-        <ol class="glist">
-          {GRAMMAR.map((g, i) => {
-            const ps = phrasesByGrammar.get(g.id) ?? [];
-            const known = ps.filter((p) => masteryOf(state.cards, p.id) >= 2).length;
-            return (
-              <li key={g.id}>
-                <a href={`#/grammar/${g.id}`} class="gitem">
-                  <span class="gitem-num">{i + 1}</span>
-                  <span class="gitem-text">
-                    <span class="gitem-title">{g.title}</span>
-                    <span class="gitem-sum">{g.summary}</span>
+    <Screen tab="grammar" title="文法ノート">
+      <p class="lead">型を知っておくと、単語を入れ替えて言えることが増えます。</p>
+      <ol class="rows">
+        {GRAMMAR.map((g) => {
+          const ps = phrasesByGrammar.get(g.id) ?? [];
+          const known = ps.filter((p) => masteryOf(state.cards, p.id) >= 2).length;
+          return (
+            <li key={g.id}>
+              <a href={`#/grammar/${g.id}`} class="row link-row">
+                <span class="row-main">
+                  <span class="row-title">{g.title}</span>
+                  <span class="row-sub clamp">{g.summary}</span>
+                </span>
+                {ps.length > 0 && (
+                  <span class="row-count">
+                    {known}
+                    <small>/{ps.length}</small>
                   </span>
-                  {ps.length > 0 && (
-                    <span class="gitem-count">
-                      {known}/{ps.length}
-                    </span>
-                  )}
-                </a>
-              </li>
-            );
-          })}
-        </ol>
-      </main>
-    </div>
+                )}
+                <Icon name="chevron" size={18} />
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+    </Screen>
   );
 }
 
 export function GrammarNote({ state, id }) {
   const g = grammarById.get(id);
-  const idx = useMemo(() => GRAMMAR.findIndex((x) => x.id === id), [id]);
+  const [more, setMore] = useState(false);
   if (!g) {
     return (
-      <div class="page">
-        <TopBar title="見つかりません" backTo="grammar" />
-      </div>
+      <Screen tab="grammar" title="見つかりません" back="grammar">
+        <p class="empty">このノートはありません。</p>
+      </Screen>
     );
   }
   const rate = state.settings.rate;
-  const prev = GRAMMAR[idx - 1];
+  const idx = GRAMMAR.indexOf(g);
   const next = GRAMMAR[idx + 1];
   const related = phrasesByGrammar.get(g.id) ?? [];
   return (
-    <div class="page">
-      <TopBar title="文法ノート" backTo="grammar" />
-      <main class="page-main note">
+    <Screen tab="grammar" title="文法ノート" back="grammar">
+      <article class="note-page">
         <h2 class="note-title">{g.title}</h2>
         <p class="note-sum">{g.summary}</p>
         {g.body.map((b, i) => (
           <Block key={i} b={b} />
         ))}
+
         {g.swap?.length > 0 && (
-          <section class="swap">
-            <h3>入れ替えて使ってみよう</h3>
-            <ul>
+          <section>
+            <h3 class="section-title">入れ替えてみる</h3>
+            <ul class="rows">
               {g.swap.map((s) => (
-                <li key={s.es}>
-                  <div>
-                    <p class="swap-es" lang="es">
-                      {s.es}
-                    </p>
-                    <p class="swap-ja">{s.ja}</p>
-                  </div>
-                  <SpeakButton text={s.es} rate={rate} />
+                <li key={s.es} class="row phrase-row">
+                  <span class="row-main">
+                    <Spanish text={s.es} rate={rate} class="row-es" />
+                    <span class="row-sub">{s.ja}</span>
+                  </span>
                 </li>
               ))}
             </ul>
           </section>
         )}
+
         {related.length > 0 && (
           <section>
-            <h3>この型を使うフレーズ</h3>
-            <PhraseList phrases={related.slice(0, 6)} state={state} />
-            {related.length > 6 && (
-              <details class="more">
-                <summary>ほかに {related.length - 6} 件</summary>
-                <PhraseList phrases={related.slice(6)} state={state} />
-              </details>
+            <h3 class="section-title">この型を使うフレーズ</h3>
+            <PhraseList phrases={more ? related : related.slice(0, SHOW_RELATED)} state={state} />
+            {!more && related.length > SHOW_RELATED && (
+              <button type="button" class="text-btn more" onClick={() => setMore(true)}>
+                ほかに {related.length - SHOW_RELATED} 件を表示
+              </button>
             )}
           </section>
         )}
-        <nav class="note-nav">
-          {prev ? <a href={`#/grammar/${prev.id}`}>‹ {prev.title}</a> : <span />}
-          {next ? <a href={`#/grammar/${next.id}`}>{next.title} ›</a> : <span />}
-        </nav>
-      </main>
-    </div>
+
+        {next && (
+          <a class="row link-row next-note" href={`#/grammar/${next.id}`}>
+            <span class="row-main">
+              <span class="row-sub">次のノート</span>
+              <span class="row-title">{next.title}</span>
+            </span>
+            <Icon name="chevron" size={18} />
+          </a>
+        )}
+      </article>
+    </Screen>
   );
 }
 
@@ -118,17 +118,17 @@ function Block({ b }) {
     case "table":
       return (
         <div class="table-wrap">
-          <table>
+          <table class="conj">
             <thead>
               <tr>
-                {b.head.map((h) => (
-                  <th key={h}>{h}</th>
+                {b.head.map((h, i) => (
+                  <th key={i}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {b.rows.map((r) => (
-                <tr key={r.join("|")}>
+              {b.rows.map((r, ri) => (
+                <tr key={ri}>
                   {r.map((c, i) => (
                     <td key={i}>{c}</td>
                   ))}
@@ -139,7 +139,7 @@ function Block({ b }) {
         </div>
       );
     case "tip":
-      return <p class="tip">💡 {b.text}</p>;
+      return <p class="tip">{b.text}</p>;
     default:
       return null;
   }
