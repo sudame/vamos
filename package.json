@@ -1,0 +1,17 @@
+{
+  "name": "vamos",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@fontsource-variable/literata": "5.3.0",
+    "preact": "11.2.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "2.10.6",
+    "@types/node": "26.6.6",
+    "typescript": "7.0.2",
+    "vite": "8.3.7",
+    "vite-plugin-pwa": "2.0.0",
+    "workbox-window": "7.4.1"
+  }
+}

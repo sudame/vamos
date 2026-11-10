@@ -1,0 +1,758 @@
+[
+  {
+    "id": "g-greetings",
+    "title": "Hola / Buenos días ― あいさつ",
+    "summary": "Hola はいつでも使えるあいさつです。店に入るときや人に声をかけるときに一言添えるだけで、印象が大きく変わります。",
+    "body": [
+      {"type": "p", "text": "スペインでは、店やバルに入ったとき、エレベーターで乗り合わせたときにも、あいさつをするのが普通です。黙って入るより、まず一言かけてから用件を言いましょう。"},
+      {"type": "table", "head": ["スペイン語", "意味・使う場面"], "rows": [
+        ["Hola", "こんにちは（時間帯を問わず使える）"],
+        ["Buenos días", "おはようございます（昼食の時間ごろまで）"],
+        ["Buenas tardes", "こんにちは（昼食後から暗くなるまで）"],
+        ["Buenas noches", "こんばんは／おやすみなさい"],
+        ["Adiós", "さようなら"],
+        ["Hasta luego", "では、また（店を出るときの定番）"],
+        ["Gracias", "ありがとうございます"],
+        ["De nada", "どういたしまして"]
+      ]},
+      {"type": "pattern", "es": "Hola, buenos días. + 用件", "ja": "こんにちは。〜（用件）"},
+      {"type": "tip", "text": "スペインの昼食は 14 時ごろなので、Buenos días は昼過ぎまで使えます。くだけた場面では短く Buenas とだけ言う人も多いです。"},
+      {"type": "tip", "text": "店を出るときは Adiós より Hasta luego のほうがよく聞きます。もう会わない相手にも使って構いません。"}
+    ],
+    "swap": [
+      {"es": "Hola, buenos días.", "ja": "こんにちは、おはようございます。"},
+      {"es": "Buenas tardes, una mesa para dos, por favor.", "ja": "こんにちは。2 人で席をお願いします。"},
+      {"es": "Buenas noches, tengo una reserva.", "ja": "こんばんは。予約しています。"},
+      {"es": "Muchas gracias. ¡Hasta luego!", "ja": "どうもありがとうございました。では、また！"},
+      {"es": "Gracias. ―De nada.", "ja": "ありがとうございます。―どういたしまして。"},
+      {"es": "Hola, buenas. ¿Habla inglés?", "ja": "こんにちは。英語を話せますか？"}
+    ]
+  },
+  {
+    "id": "g-por-favor-politeness",
+    "title": "〜, por favor / Perdone ― 〜をお願いします／すみません",
+    "summary": "ほしいものの名前に por favor を付けるだけで、丁寧なお願いになります。声をかけるときの Perdone、相づちの Vale もあわせて覚えましょう。",
+    "body": [
+      {"type": "p", "text": "文法を気にせず、ほしいものの名前の後ろに por favor を付けるだけで用が足ります。旅行でいちばん出番の多い型です。"},
+      {"type": "pattern", "es": "名詞 + , por favor.", "ja": "〜をお願いします"},
+      {"type": "table", "head": ["スペイン語", "意味・使う場面"], "rows": [
+        ["Perdone / Disculpe", "すみません（人に声をかける、道を空けてもらう）"],
+        ["Perdón", "ごめんなさい（ぶつかったときなど）"],
+        ["Vale", "わかりました／オーケー"],
+        ["Muchas gracias", "どうもありがとうございます"],
+        ["No, gracias", "いいえ、けっこうです"]
+      ]},
+      {"type": "tip", "text": "Vale はスペイン本国でとてもよく使う相づちです。店員に何か言われて「わかりました」と返すときは Vale, gracias で十分です。"},
+      {"type": "tip", "text": "混んだ車内で人の前を通るときは Perdone か、短く Perdón と言えば通じます。"}
+    ],
+    "swap": [
+      {"es": "La cuenta, por favor.", "ja": "お会計をお願いします。"},
+      {"es": "Un café con leche, por favor.", "ja": "カフェ・コン・レチェを 1 つお願いします。"},
+      {"es": "Un billete para Toledo, por favor.", "ja": "トレド行きの切符を 1 枚お願いします。"},
+      {"es": "Agua sin gas, por favor.", "ja": "炭酸なしの水をお願いします。"},
+      {"es": "Perdone, ¿el metro?", "ja": "すみません、地下鉄はどこですか？"},
+      {"es": "Vale, muchas gracias.", "ja": "わかりました、どうもありがとうございます。"},
+      {"es": "No, gracias. Solo estoy mirando.", "ja": "いいえ、けっこうです。見ているだけです。"}
+    ]
+  },
+  {
+    "id": "g-usted-tu",
+    "title": "usted と tú ― 「あなた」の丁寧形と親しい形",
+    "summary": "相手を丁寧に呼ぶときは usted、親しく呼ぶときは tú を使います。スペインでは tú で話しかけられることも多いですが、旅行者は usted で話せば失礼になりません。",
+    "body": [
+      {"type": "p", "text": "スペイン語の「あなた」には 2 つの言い方があり、それに合わせて動詞の形も変わります。初対面の大人や店員には usted、友人や子どもには tú を使います。"},
+      {"type": "table", "head": ["", "1 人に", "2 人以上に"], "rows": [
+        ["丁寧", "usted", "ustedes"],
+        ["親しい", "tú", "vosotros / vosotras"]
+      ]},
+      {"type": "p", "text": "usted は「彼・彼女」と同じ形の動詞を使います。動詞の形で誰の話か分かるので、usted という単語そのものはよく省かれます。"},
+      {"type": "table", "head": ["", "hablar（話す）", "tener（持っている）"], "rows": [
+        ["tú", "hablas", "tienes"],
+        ["usted", "habla", "tiene"],
+        ["vosotros", "habláis", "tenéis"],
+        ["ustedes", "hablan", "tienen"]
+      ]},
+      {"type": "tip", "text": "スペイン本国では、バルの店員などが客にも気軽に tú で話しかけます。vosotros もふだん使う形で、グループ客には ¿Qué queréis?（何にしますか？）のように聞かれます。聞き取れれば十分で、自分から話すときは usted のままで構いません。"}
+    ],
+    "swap": [
+      {"es": "¿Habla usted inglés?", "ja": "英語を話されますか？"},
+      {"es": "¿Hablas inglés?", "ja": "英語、話せる？"},
+      {"es": "¿Tiene usted cambio?", "ja": "おつりはありますか？"},
+      {"es": "¿De dónde es usted?", "ja": "どちらのご出身ですか？"},
+      {"es": "¿Qué queréis tomar?", "ja": "（皆さん）何を飲みますか？"},
+      {"es": "¿Ustedes tienen mesa para cuatro?", "ja": "4 人の席はありますか？"}
+    ]
+  },
+  {
+    "id": "g-gender-article",
+    "title": "el / la / un / una ― 名詞の男性・女性と冠詞",
+    "summary": "スペイン語の名詞には男性名詞と女性名詞があり、前に付ける el・la（その）や un・una（ひとつの）が変わります。-o で終われば男性、-a で終われば女性が基本です。",
+    "body": [
+      {"type": "p", "text": "名詞はすべて男性か女性に分かれています。意味とは関係なく決まっているので、単語ごとに el か la を付けて覚えるのが近道です。"},
+      {"type": "table", "head": ["", "男性", "女性"], "rows": [
+        ["その（特定のもの）", "el", "la"],
+        ["ひとつの（不特定のもの）", "un", "una"],
+        ["例", "el billete / un vino", "la cuenta / una cerveza"]
+      ]},
+      {"type": "pattern", "es": "un / una + 名詞, por favor.", "ja": "〜をひとつお願いします"},
+      {"type": "p", "text": "語尾が -o なら男性、-a なら女性がほとんどです。例外として、el día（日）、el mapa（地図）、el problema（問題）は男性、la mano（手）は女性です。"},
+      {"type": "tip", "text": "-ción で終わる語は女性です（la habitación 部屋、la estación 駅）。冠詞を間違えても意味は通じるので、気にせず話しましょう。"}
+    ],
+    "swap": [
+      {"es": "Un vino tinto, por favor.", "ja": "赤ワインを 1 杯お願いします。"},
+      {"es": "Una cerveza, por favor.", "ja": "ビールを 1 杯お願いします。"},
+      {"es": "¿Dónde está la estación?", "ja": "駅はどこですか？"},
+      {"es": "¿Dónde está el museo?", "ja": "美術館はどこですか？"},
+      {"es": "Una habitación doble, por favor.", "ja": "ダブルの部屋をお願いします。"},
+      {"es": "¿Tiene un mapa de la ciudad?", "ja": "市内の地図はありますか？"}
+    ]
+  },
+  {
+    "id": "g-plural",
+    "title": "-s / -es ― 名詞の複数形",
+    "summary": "母音で終わる名詞には -s、子音で終わる名詞には -es を付けて複数形にします。冠詞も los・las、unos・unas に変わります。",
+    "body": [
+      {"type": "p", "text": "2 つ以上のものを頼むときは、名詞を複数形にします。作り方は語尾で決まります。"},
+      {"type": "table", "head": ["語尾", "付けるもの", "例"], "rows": [
+        ["母音（a, e, o など）", "-s", "cerveza → cervezas"],
+        ["子音（n, l, r など）", "-es", "tren → trenes"],
+        ["-z", "-z を -ces に", "vez → veces"]
+      ]},
+      {"type": "table", "head": ["", "男性", "女性"], "rows": [
+        ["その（複数）", "los", "las"],
+        ["いくつかの", "unos", "unas"]
+      ]},
+      {"type": "pattern", "es": "数 + 名詞の複数形, por favor.", "ja": "〜を…つお願いします"},
+      {"type": "tip", "text": "habitación（部屋）は habitaciones のように、複数形にするとアクセント記号が消える語があります。発音の強い位置は変わりません。"}
+    ],
+    "swap": [
+      {"es": "Dos cervezas, por favor.", "ja": "ビールを 2 杯お願いします。"},
+      {"es": "Dos cafés con leche, por favor.", "ja": "カフェ・コン・レチェを 2 つお願いします。"},
+      {"es": "Tres billetes para Segovia, por favor.", "ja": "セゴビア行きの切符を 3 枚お願いします。"},
+      {"es": "¿Dónde están los servicios?", "ja": "お手洗いはどこですか？"},
+      {"es": "¿Tiene habitaciones libres?", "ja": "空いている部屋はありますか？"},
+      {"es": "¿A qué hora salen los trenes para Madrid?", "ja": "マドリード行きの列車は何時に出ますか？"}
+    ]
+  },
+  {
+    "id": "g-numbers",
+    "title": "uno, dos, tres… ― 数と値段",
+    "summary": "値段、人数、部屋番号、時刻など、旅行では数を聞き取る場面が多くあります。0〜20 と、30 以降の十の位を覚えれば組み立てられます。",
+    "body": [
+      {"type": "table", "head": ["数", "スペイン語", "数", "スペイン語"], "rows": [
+        ["1", "uno", "11", "once"],
+        ["2", "dos", "12", "doce"],
+        ["3", "tres", "13", "trece"],
+        ["4", "cuatro", "14", "catorce"],
+        ["5", "cinco", "15", "quince"],
+        ["6", "seis", "16", "dieciséis"],
+        ["7", "siete", "17", "diecisiete"],
+        ["8", "ocho", "18", "dieciocho"],
+        ["9", "nueve", "19", "diecinueve"],
+        ["10", "diez", "20", "veinte"]
+      ]},
+      {"type": "p", "text": "21〜29 は veintiuno, veintidós… と 1 語で書きます。31 からは treinta y uno のように y（と）でつなぎます。"},
+      {"type": "table", "head": ["数", "スペイン語"], "rows": [
+        ["30 / 40 / 50", "treinta / cuarenta / cincuenta"],
+        ["60 / 70", "sesenta / setenta"],
+        ["80 / 90", "ochenta / noventa"],
+        ["100", "cien（101 以上は ciento uno…）"],
+        ["500", "quinientos"],
+        ["1000", "mil"]
+      ]},
+      {"type": "tip", "text": "名詞の前では uno が un・una に変わります（un café, una cerveza）。値段の 3,50 € は tres euros con cincuenta、または短く tres cincuenta と言います。スペインでは小数点にコンマを使います。"}
+    ],
+    "swap": [
+      {"es": "Son doce euros.", "ja": "12 ユーロです。"},
+      {"es": "Son tres euros con cincuenta.", "ja": "3 ユーロ 50 セントです。"},
+      {"es": "Una mesa para cuatro, por favor.", "ja": "4 人の席をお願いします。"},
+      {"es": "Mi habitación es la doscientos quince.", "ja": "私の部屋は 215 号室です。"},
+      {"es": "Dos noches, por favor.", "ja": "2 泊でお願いします。"},
+      {"es": "El autobús veintisiete, ¿va al centro?", "ja": "27 番のバスは中心街へ行きますか？"}
+    ]
+  },
+  {
+    "id": "g-cuanto",
+    "title": "¿Cuánto cuesta…? ― いくらですか／どのくらい",
+    "summary": "¿Cuánto cuesta? は 1 つの品の値段を、¿Cuánto es? は会計の合計を聞く型です。後ろに名詞を付ければ「いくつ」「どのくらい」も聞けます。",
+    "body": [
+      {"type": "pattern", "es": "¿Cuánto cuesta + 単数のもの?", "ja": "〜はいくらですか"},
+      {"type": "pattern", "es": "¿Cuánto cuestan + 複数のもの?", "ja": "（複数の）〜はいくらですか"},
+      {"type": "p", "text": "会計のときは ¿Cuánto es?（全部でいくらですか）が定番です。¿Cuánto vale? も同じ意味で使えます。"},
+      {"type": "p", "text": "cuánto は後ろの名詞に合わせて形が変わります。男性名詞なら cuántos、女性名詞なら cuántas です。"},
+      {"type": "table", "head": ["形", "例", "意味"], "rows": [
+        ["cuánto", "¿Cuánto tiempo?", "どのくらいの時間"],
+        ["cuánta", "¿Cuánta agua?", "どのくらいの水"],
+        ["cuántos", "¿Cuántos días?", "何日"],
+        ["cuántas", "¿Cuántas personas?", "何人"]
+      ]},
+      {"type": "tip", "text": "店で ¿Cuántos son? と聞かれたら「何名様ですか」の意味です。Somos dos（2 人です）のように答えます。"}
+    ],
+    "swap": [
+      {"es": "¿Cuánto cuesta esto?", "ja": "これはいくらですか？"},
+      {"es": "¿Cuánto es?", "ja": "（会計で）おいくらですか？"},
+      {"es": "¿Cuánto cuesta un billete para Sevilla?", "ja": "セビーリャ行きの切符はいくらですか？"},
+      {"es": "¿Cuánto cuestan estas postales?", "ja": "この絵はがきはいくらですか？"},
+      {"es": "¿Cuánto cuesta la entrada?", "ja": "入場料はいくらですか？"},
+      {"es": "¿Cuánto tiempo se tarda en llegar?", "ja": "着くまでどのくらいかかりますか？"},
+      {"es": "¿Cuántas paradas faltan?", "ja": "あと何駅ですか？"}
+    ]
+  },
+  {
+    "id": "g-question-words",
+    "title": "¿Qué? ¿Dónde? ¿Cuándo? ― 疑問詞",
+    "summary": "「何」「どこ」「いつ」などの疑問詞を文の頭に置くと質問になります。疑問詞にはいつもアクセント記号が付きます。",
+    "body": [
+      {"type": "p", "text": "疑問文は ¿ で始めて ? で終えます。疑問詞を先頭に置き、その後ろに動詞を続けます。"},
+      {"type": "pattern", "es": "¿疑問詞 + 動詞 + …?", "ja": "何／どこ／いつ〜ですか"},
+      {"type": "table", "head": ["疑問詞", "意味"], "rows": [
+        ["¿Qué?", "何"],
+        ["¿Dónde?", "どこ"],
+        ["¿Cuándo?", "いつ"],
+        ["¿A qué hora?", "何時に"],
+        ["¿Cómo?", "どのように／どうやって"],
+        ["¿Cuánto?", "いくら／どのくらい"],
+        ["¿Quién?", "誰"],
+        ["¿Cuál?", "どれ"],
+        ["¿Por qué?", "なぜ"]
+      ]},
+      {"type": "tip", "text": "疑問詞の付かない質問は、ふつうの文の語尾を上げて言うだけです。Tiene wifi（Wi-Fi があります）を上げ調子で言えば ¿Tiene wifi?（Wi-Fi はありますか）になります。"},
+      {"type": "tip", "text": "聞き取れなかったときは ¿Cómo?（何とおっしゃいましたか）と聞き返せます。"}
+    ],
+    "swap": [
+      {"es": "¿Qué es esto?", "ja": "これは何ですか？"},
+      {"es": "¿Dónde está la parada de autobús?", "ja": "バス停はどこですか？"},
+      {"es": "¿Cuándo sale el próximo tren?", "ja": "次の列車はいつ出ますか？"},
+      {"es": "¿A qué hora cierra la tienda?", "ja": "お店は何時に閉まりますか？"},
+      {"es": "¿Cómo se dice esto en español?", "ja": "これはスペイン語で何と言いますか？"},
+      {"es": "¿Cuál es el plato del día?", "ja": "本日の料理はどれですか？"},
+      {"es": "¿Qué me recomienda?", "ja": "何がおすすめですか？"}
+    ]
+  },
+  {
+    "id": "g-donde-esta",
+    "title": "¿Dónde está…? ― 〜はどこですか",
+    "summary": "¿Dónde está + 場所? で場所をたずねます。探すものが複数なら está を están に変えます。答えに出てくる方向の言葉もあわせて覚えましょう。",
+    "body": [
+      {"type": "pattern", "es": "¿Dónde está + el / la + 単数の名詞?", "ja": "〜はどこですか"},
+      {"type": "pattern", "es": "¿Dónde están + los / las + 複数の名詞?", "ja": "（複数の）〜はどこですか"},
+      {"type": "p", "text": "Perdone（すみません）を先に付けると、通りすがりの人にも聞きやすくなります。"},
+      {"type": "table", "head": ["答えでよく聞く言葉", "意味"], "rows": [
+        ["a la derecha", "右に"],
+        ["a la izquierda", "左に"],
+        ["todo recto", "まっすぐ"],
+        ["al fondo", "突き当たりに／奥に"],
+        ["aquí / allí", "ここ／あそこ"],
+        ["cerca / lejos", "近い／遠い"]
+      ]},
+      {"type": "tip", "text": "お手洗いは el baño のほか、スペインでは los servicios や el aseo もよく使います。店の中なら ¿Dónde están los servicios? と聞くのが自然です。"}
+    ],
+    "swap": [
+      {"es": "Perdone, ¿dónde está el baño?", "ja": "すみません、お手洗いはどこですか？"},
+      {"es": "¿Dónde está la estación de metro?", "ja": "地下鉄の駅はどこですか？"},
+      {"es": "¿Dónde está la parada del autobús?", "ja": "バス停はどこですか？"},
+      {"es": "¿Dónde está la oficina de turismo?", "ja": "観光案内所はどこですか？"},
+      {"es": "¿Dónde están los servicios?", "ja": "お手洗いはどこですか？"},
+      {"es": "¿Dónde está la Plaza Mayor?", "ja": "マヨール広場はどこですか？"},
+      {"es": "¿Dónde está el andén cinco?", "ja": "5 番ホームはどこですか？"}
+    ]
+  },
+  {
+    "id": "g-hay",
+    "title": "¿Hay…? ― 〜はありますか",
+    "summary": "hay は「〜がある・いる」を表し、単数でも複数でも形が変わりません。あるかどうか分からないものを探すときに使います。",
+    "body": [
+      {"type": "pattern", "es": "¿Hay + 名詞 + (por aquí)?", "ja": "（この近くに）〜はありますか"},
+      {"type": "pattern", "es": "No hay + 名詞.", "ja": "〜はありません"},
+      {"type": "p", "text": "hay の後ろには、un・una を付けた名詞か、冠詞なしの名詞を置きます。el・la は付けません。"},
+      {"type": "table", "head": ["言いたいこと", "使う型", "例"], "rows": [
+        ["あるかどうか知りたい", "hay + un / una", "¿Hay un cajero por aquí?"],
+        ["あると分かっていて、場所を知りたい", "está + el / la", "¿Dónde está el cajero?"]
+      ]},
+      {"type": "tip", "text": "hay は「ある」と「いる」の両方に使えます。¿Hay alguien?（誰かいますか）のように人にも使えます。"}
+    ],
+    "swap": [
+      {"es": "¿Hay un cajero por aquí?", "ja": "この近くに ATM はありますか？"},
+      {"es": "¿Hay wifi?", "ja": "Wi-Fi はありますか？"},
+      {"es": "¿Hay una farmacia cerca?", "ja": "近くに薬局はありますか？"},
+      {"es": "¿Hay mesa para dos?", "ja": "2 人の席はありますか？"},
+      {"es": "¿Hay billetes para hoy?", "ja": "今日の切符はありますか？"},
+      {"es": "¿Hay algún plato vegetariano?", "ja": "ベジタリアン向けの料理はありますか？"},
+      {"es": "Lo siento, no hay.", "ja": "申し訳ありませんが、ありません。"}
+    ]
+  },
+  {
+    "id": "g-quiero-quisiera",
+    "title": "Quiero… / Quisiera… ― 〜がほしいです／〜したいのですが",
+    "summary": "quiero は「〜がほしい・〜したい」、quisiera はそれを控えめにした言い方です。後ろには名詞も動詞の原形も置けます。",
+    "body": [
+      {"type": "pattern", "es": "Quisiera + 名詞", "ja": "〜をお願いしたいのですが"},
+      {"type": "pattern", "es": "Quisiera + 動詞の原形", "ja": "〜したいのですが"},
+      {"type": "p", "text": "quiero は直接的な言い方ですが、スペインでは por favor を添えれば失礼にはなりません。ホテルや予約の電話など、少し改まった場面では quisiera を使うと安心です。"},
+      {"type": "table", "head": ["言い方", "丁寧さ"], "rows": [
+        ["Quiero…", "ふつう（〜がほしい）"],
+        ["Me gustaría…", "丁寧（〜したいのですが）"],
+        ["Quisiera…", "丁寧（〜したいのですが）"]
+      ]},
+      {"type": "table", "head": ["主語", "querer（ほしい）"], "rows": [
+        ["yo", "quiero"],
+        ["usted", "quiere"],
+        ["nosotros", "queremos"]
+      ]},
+      {"type": "tip", "text": "動詞の原形とは、辞書に載っている形のことです。スペイン語では -ar, -er, -ir で終わります（reservar 予約する、comer 食べる、ir 行く）。"}
+    ],
+    "swap": [
+      {"es": "Quisiera reservar una mesa para dos.", "ja": "2 人で席を予約したいのですが。"},
+      {"es": "Quisiera un billete de ida y vuelta a Sevilla.", "ja": "セビーリャまでの往復切符がほしいのですが。"},
+      {"es": "Quisiera cambiar de habitación.", "ja": "部屋を替えていただきたいのですが。"},
+      {"es": "Quiero este, por favor.", "ja": "これをください。"},
+      {"es": "Queremos dos entradas para mañana.", "ja": "明日の入場券を 2 枚ほしいのですが。"},
+      {"es": "Me gustaría probar el vino de la casa.", "ja": "ハウスワインを飲んでみたいのですが。"}
+    ]
+  },
+  {
+    "id": "g-pedir-bar",
+    "title": "¿Me pone…? ― （バルで）〜をください",
+    "summary": "スペインのバルでは ¿Me pone…?（〜をいただけますか）が注文の定番です。poner（置く）という動詞を使った言い方です。",
+    "body": [
+      {"type": "p", "text": "poner は「置く」という意味の動詞です。カウンター越しに「私に〜を出してもらえますか」と頼む感覚で、スペインのバルでとてもよく聞きます。"},
+      {"type": "pattern", "es": "¿Me pone + 注文するもの?", "ja": "〜をいただけますか"},
+      {"type": "table", "head": ["言い方", "相手・場面"], "rows": [
+        ["¿Me pone…?", "私に（usted で話すとき）"],
+        ["¿Me pones…?", "私に（tú で話すとき）"],
+        ["¿Nos pone…?", "私たちに"],
+        ["Para mí, …", "私は〜にします（順に注文するとき）"]
+      ]},
+      {"type": "p", "text": "量の言い方も覚えておくと便利です。tapa は小皿、ración は 1 皿分、media ración はその半分です。生ビールの小グラスは caña と言います。"},
+      {"type": "tip", "text": "食べ終わったら ¿Me cobra?（お会計をお願いできますか）や La cuenta, por favor で会計を頼みます。持ち帰りは para llevar、店内なら para tomar aquí です。"}
+    ],
+    "swap": [
+      {"es": "¿Me pone una caña, por favor?", "ja": "生ビールを 1 杯いただけますか？"},
+      {"es": "¿Nos pone dos cañas y una tapa de tortilla?", "ja": "生ビール 2 杯とトルティージャの小皿をいただけますか？"},
+      {"es": "¿Me pone una ración de jamón?", "ja": "生ハムを 1 皿いただけますか？"},
+      {"es": "¿Me pones un café solo?", "ja": "エスプレッソを 1 杯もらえる？"},
+      {"es": "Para mí, un vino blanco.", "ja": "私は白ワインにします。"},
+      {"es": "Media ración de croquetas, por favor.", "ja": "コロッケのハーフサイズをお願いします。"},
+      {"es": "¿Me cobra, por favor?", "ja": "お会計をお願いできますか？"}
+    ]
+  },
+  {
+    "id": "g-poder",
+    "title": "¿Puedo…? / ¿Puede…? ― 〜してもいいですか／〜してもらえますか",
+    "summary": "poder + 動詞の原形で「〜できる」。¿Puedo…? で許可を求め、¿Puede…? で相手に頼めます。",
+    "body": [
+      {"type": "p", "text": "poder は「〜できる」という意味で、後ろに動詞の原形を続けます。主語が自分なら「〜してもいいですか」、相手なら「〜してもらえますか」になります。"},
+      {"type": "pattern", "es": "¿Puedo + 動詞の原形?", "ja": "〜してもいいですか"},
+      {"type": "pattern", "es": "¿Puede + 動詞の原形?", "ja": "〜してもらえますか"},
+      {"type": "table", "head": ["主語", "poder"], "rows": [
+        ["yo", "puedo"],
+        ["tú", "puedes"],
+        ["usted", "puede"],
+        ["nosotros", "podemos"],
+        ["ustedes", "pueden"]
+      ]},
+      {"type": "tip", "text": "さらに丁寧に頼みたいときは ¿Podría…?（〜していただけますか）を使います。¿Podría repetir, por favor?（もう一度言っていただけますか）は覚えておくと役に立ちます。"}
+    ],
+    "swap": [
+      {"es": "¿Puedo pagar con tarjeta?", "ja": "カードで払えますか？"},
+      {"es": "¿Puedo hacer una foto?", "ja": "写真を撮ってもいいですか？"},
+      {"es": "¿Puedo probármelo?", "ja": "試着してもいいですか？"},
+      {"es": "¿Puede hablar más despacio, por favor?", "ja": "もう少しゆっくり話していただけますか？"},
+      {"es": "¿Puede llamar a un taxi?", "ja": "タクシーを呼んでもらえますか？"},
+      {"es": "¿Podemos dejar las maletas aquí?", "ja": "ここに荷物を置いていってもいいですか？"},
+      {"es": "¿Podría repetir, por favor?", "ja": "もう一度言っていただけますか？"}
+    ]
+  },
+  {
+    "id": "g-se-puede",
+    "title": "¿Se puede…? ― 〜できますか／〜してもいいですか（一般に）",
+    "summary": "¿Se puede + 動詞の原形? は、特定の誰かではなく「ここでは〜できるか」をたずねる型です。規則や可否を聞くのに向いています。",
+    "body": [
+      {"type": "p", "text": "¿Puedo…? が「私は〜してもいいか」なのに対し、¿Se puede…? は「（誰でも）〜できるか」という聞き方です。館内のルールや交通手段などを確かめるときに使います。"},
+      {"type": "pattern", "es": "¿Se puede + 動詞の原形 (+ aquí)?", "ja": "（ここで）〜できますか"},
+      {"type": "pattern", "es": "No se puede + 動詞の原形.", "ja": "〜してはいけません／〜できません"},
+      {"type": "tip", "text": "No se puede は「禁止」の意味でよく使われ、看板では Prohibido（禁止）と並んで見かけます。"},
+      {"type": "tip", "text": "部屋に入るときにノックして ¿Se puede? と言うと「入ってもいいですか」の意味になります。"}
+    ],
+    "swap": [
+      {"es": "¿Se puede pagar con tarjeta?", "ja": "カードで払えますか？"},
+      {"es": "¿Se pueden hacer fotos aquí?", "ja": "ここで写真を撮ってもいいですか？"},
+      {"es": "¿Se puede ir andando?", "ja": "歩いて行けますか？"},
+      {"es": "¿Se puede entrar con la mochila?", "ja": "リュックを持って入れますか？"},
+      {"es": "¿Se puede comprar el billete en el autobús?", "ja": "バスの中で切符を買えますか？"},
+      {"es": "Aquí no se puede fumar.", "ja": "ここは禁煙です。"}
+    ]
+  },
+  {
+    "id": "g-necesitar",
+    "title": "Necesito… ― 〜が必要です",
+    "summary": "necesito + 名詞または動詞の原形で「〜が必要です」「〜しなければなりません」。困ったときに用件をはっきり伝えられます。",
+    "body": [
+      {"type": "pattern", "es": "Necesito + 名詞", "ja": "〜が必要です"},
+      {"type": "pattern", "es": "Necesito + 動詞の原形", "ja": "〜する必要があります"},
+      {"type": "table", "head": ["主語", "necesitar"], "rows": [
+        ["yo", "necesito"],
+        ["usted", "necesita"],
+        ["nosotros", "necesitamos"],
+        ["ustedes", "necesitan"]
+      ]},
+      {"type": "p", "text": "相手に「〜は必要ですか」と聞くときは ¿Necesito…? を使います。"},
+      {"type": "tip", "text": "スペインでは ¿Hace falta + 動詞の原形?（〜する必要がありますか）もよく使います。¿Hace falta reservar?（予約は要りますか）は覚えておくと便利です。"}
+    ],
+    "swap": [
+      {"es": "Necesito un médico.", "ja": "医者が必要です。"},
+      {"es": "Necesito ayuda, por favor.", "ja": "助けてください。"},
+      {"es": "Necesito cambiar el billete.", "ja": "切符を変更しなければなりません。"},
+      {"es": "Necesitamos un taxi.", "ja": "タクシーが必要です。"},
+      {"es": "Necesito un cargador para el móvil.", "ja": "携帯の充電器が必要です。"},
+      {"es": "¿Necesito el pasaporte?", "ja": "パスポートは必要ですか？"},
+      {"es": "¿Hace falta reservar?", "ja": "予約は必要ですか？"}
+    ]
+  },
+  {
+    "id": "g-tener",
+    "title": "Tengo… / ¿Tiene…? ― 持っています／ありますか",
+    "summary": "tener は「持っている」。店で ¿Tiene…? と聞けば「〜はありますか」になります。Tengo que + 動詞の原形で「〜しなければならない」も言えます。",
+    "body": [
+      {"type": "table", "head": ["主語", "tener"], "rows": [
+        ["yo", "tengo"],
+        ["tú", "tienes"],
+        ["usted", "tiene"],
+        ["nosotros", "tenemos"],
+        ["ustedes", "tienen"]
+      ]},
+      {"type": "pattern", "es": "¿Tiene + 名詞?", "ja": "（お店に）〜はありますか"},
+      {"type": "pattern", "es": "Tengo que + 動詞の原形", "ja": "〜しなければなりません"},
+      {"type": "p", "text": "体の状態も tener で表します。日本語の「お腹がすいた」は「空腹を持っている」という言い方になります。"},
+      {"type": "table", "head": ["スペイン語", "意味"], "rows": [
+        ["Tengo hambre.", "お腹がすきました"],
+        ["Tengo sed.", "のどが渇きました"],
+        ["Tengo frío / calor.", "寒いです／暑いです"],
+        ["Tengo fiebre.", "熱があります"]
+      ]},
+      {"type": "tip", "text": "¿Hay…? が「（そもそも）ありますか」なのに対し、¿Tiene…? は「（お店として）置いていますか」という聞き方です。店ではどちらも使えます。"}
+    ],
+    "swap": [
+      {"es": "Tengo una reserva a nombre de Tanaka.", "ja": "田中の名前で予約しています。"},
+      {"es": "¿Tiene esta camiseta en talla M?", "ja": "この T シャツの M サイズはありますか？"},
+      {"es": "¿Tienen mesa para tres?", "ja": "3 人の席はありますか？"},
+      {"es": "¿Tiene la carta en inglés?", "ja": "英語のメニューはありますか？"},
+      {"es": "Tengo que coger el tren de las ocho.", "ja": "8 時の列車に乗らなければなりません。"},
+      {"es": "Tengo mucha sed.", "ja": "とてものどが渇いています。"},
+      {"es": "No tengo cambio.", "ja": "小銭を持っていません。"}
+    ]
+  },
+  {
+    "id": "g-doler",
+    "title": "Me duele… ― 〜が痛いです",
+    "summary": "me duele + 痛む場所で「〜が痛い」。痛む場所が複数なら me duelen にします。薬局や病院で症状を伝えるのに使います。",
+    "body": [
+      {"type": "p", "text": "スペイン語では「頭が私を痛ませる」という言い方をします。そのため、動詞の形は痛む場所が単数か複数かで変わります。"},
+      {"type": "pattern", "es": "Me duele + el / la + 単数の体の部分", "ja": "〜が痛いです"},
+      {"type": "pattern", "es": "Me duelen + los / las + 複数の体の部分", "ja": "（両方の）〜が痛いです"},
+      {"type": "table", "head": ["体の部分", "意味"], "rows": [
+        ["la cabeza", "頭"],
+        ["el estómago / la tripa", "胃／お腹"],
+        ["la garganta", "のど"],
+        ["la muela", "歯（奥歯）"],
+        ["la espalda", "背中・腰"],
+        ["los pies", "足"]
+      ]},
+      {"type": "tip", "text": "体の部分には「私の」を付けず、el・la を付けます。同行者の症状を伝えるときは me を le に変えて Le duele…（この人は〜が痛いです）と言います。"}
+    ],
+    "swap": [
+      {"es": "Me duele la cabeza.", "ja": "頭が痛いです。"},
+      {"es": "Me duele el estómago.", "ja": "胃が痛いです。"},
+      {"es": "Me duele la garganta.", "ja": "のどが痛いです。"},
+      {"es": "Me duelen los pies.", "ja": "足が痛いです。"},
+      {"es": "Me duele mucho aquí.", "ja": "ここがとても痛いです。"},
+      {"es": "A mi hijo le duele la tripa.", "ja": "息子がお腹を痛がっています。"},
+      {"es": "¿Tiene algo para el dolor de cabeza?", "ja": "頭痛に効く薬はありますか？"}
+    ]
+  },
+  {
+    "id": "g-ser-estar",
+    "title": "ser と estar ― 2 つの「〜です」",
+    "summary": "「〜です」には ser と estar の 2 つがあります。ser は人や物がどういうものかを、estar は今の状態と場所を表します。",
+    "body": [
+      {"type": "p", "text": "大まかには、変わらない性質や身元なら ser、そのときの状態やどこにあるかなら estar と覚えましょう。"},
+      {"type": "table", "head": ["主語", "ser", "estar"], "rows": [
+        ["yo", "soy", "estoy"],
+        ["tú", "eres", "estás"],
+        ["usted", "es", "está"],
+        ["nosotros", "somos", "estamos"],
+        ["ustedes", "son", "están"]
+      ]},
+      {"type": "table", "head": ["使い分け", "例", "意味"], "rows": [
+        ["ser：国籍・職業・名前", "Soy japonés.", "日本人です"],
+        ["ser：物の性質", "Es muy caro.", "とても高いです"],
+        ["estar：今の状態", "Estoy cansado.", "疲れています"],
+        ["estar：場所", "¿Dónde está el hotel?", "ホテルはどこですか"]
+      ]},
+      {"type": "tip", "text": "形容詞は話す人の性別に合わせて変わります。女性なら japonesa, cansada のように語尾を -a にします。"},
+      {"type": "tip", "text": "料理の味の感想は estar を使います。Está muy rico（とてもおいしいです）は食事の席でよく使う一言です。"}
+    ],
+    "swap": [
+      {"es": "Soy japonés. / Soy japonesa.", "ja": "日本人です。（男性／女性）"},
+      {"es": "Somos turistas.", "ja": "私たちは観光客です。"},
+      {"es": "Es muy bonito.", "ja": "とてもきれいですね。"},
+      {"es": "Está muy rico.", "ja": "とてもおいしいです。"},
+      {"es": "El museo está cerrado.", "ja": "美術館は閉まっています。"},
+      {"es": "Estoy un poco cansada.", "ja": "（女性が）少し疲れています。"},
+      {"es": "¿Está lejos de aquí?", "ja": "ここから遠いですか？"}
+    ]
+  },
+  {
+    "id": "g-ir",
+    "title": "Voy a… ― 〜へ行きます／〜するつもりです",
+    "summary": "ir は「行く」。voy a + 場所で「〜へ行く」、voy a + 動詞の原形で「〜するつもりです」と予定を言えます。",
+    "body": [
+      {"type": "table", "head": ["主語", "ir"], "rows": [
+        ["yo", "voy"],
+        ["tú", "vas"],
+        ["usted", "va"],
+        ["nosotros", "vamos"],
+        ["ustedes", "van"]
+      ]},
+      {"type": "pattern", "es": "Voy a + 場所", "ja": "〜へ行きます"},
+      {"type": "pattern", "es": "Voy a + 動詞の原形", "ja": "〜するつもりです"},
+      {"type": "p", "text": "a と el が並ぶと al にまとめます（a el centro → al centro）。la の前ではそのまま a la です。"},
+      {"type": "tip", "text": "乗り物を確かめるときは ¿Este tren va a…?（この列車は〜へ行きますか）が使えます。スペインでは乗り物に乗ることを coger と言い、¿Dónde cojo el autobús?（バスはどこで乗れますか）のように使います。"}
+    ],
+    "swap": [
+      {"es": "Voy a Barcelona mañana.", "ja": "明日バルセロナへ行きます。"},
+      {"es": "¿Este tren va a Córdoba?", "ja": "この列車はコルドバへ行きますか？"},
+      {"es": "¿Este autobús va al aeropuerto?", "ja": "このバスは空港へ行きますか？"},
+      {"es": "Al Museo del Prado, por favor.", "ja": "（タクシーで）プラド美術館までお願いします。"},
+      {"es": "Vamos a cenar aquí.", "ja": "ここで夕食にします。"},
+      {"es": "Voy a coger un taxi.", "ja": "タクシーに乗ります。"},
+      {"es": "¿Cómo voy a la estación de Atocha?", "ja": "アトーチャ駅へはどう行けばいいですか？"}
+    ]
+  },
+  {
+    "id": "g-para-por",
+    "title": "para と por ― 〜のために／〜で・〜を通って",
+    "summary": "para は行き先や目的、por は通り道や手段、理由を表すのが基本です。旅行でよく使う組み合わせを丸ごと覚えるのが近道です。",
+    "body": [
+      {"type": "p", "text": "どちらも日本語では「〜のために」「〜で」などと訳され、紛らわしい前置詞です。大まかには、para は「向かう先」、por は「通る道や理由」と覚えましょう。"},
+      {"type": "table", "head": ["", "使う場面", "例"], "rows": [
+        ["para", "行き先", "un billete para Madrid"],
+        ["para", "人数・相手", "una mesa para dos"],
+        ["para", "目的", "para llevar（持ち帰り用）"],
+        ["por", "通る場所・あたり", "por aquí（このあたり）"],
+        ["por", "1 つあたり", "por persona（1 人あたり）"],
+        ["por", "時間帯", "por la mañana（午前中に）"],
+        ["por", "理由・お礼", "gracias por todo"]
+      ]},
+      {"type": "pattern", "es": "¿Por dónde se va a + 場所?", "ja": "〜へはどう行けばいいですか"},
+      {"type": "tip", "text": "迷ったときは、ここに挙げた決まった言い方をそのまま使うのが確実です。por favor の por もこの por です。"}
+    ],
+    "swap": [
+      {"es": "Un billete para Granada, por favor.", "ja": "グラナダ行きの切符を 1 枚お願いします。"},
+      {"es": "Una mesa para cuatro, por favor.", "ja": "4 人の席をお願いします。"},
+      {"es": "Es para llevar.", "ja": "持ち帰りです。"},
+      {"es": "¿Hay un supermercado por aquí?", "ja": "このあたりにスーパーはありますか？"},
+      {"es": "¿Cuánto es por persona?", "ja": "1 人あたりいくらですか？"},
+      {"es": "¿Por dónde se va a la catedral?", "ja": "大聖堂へはどう行けばいいですか？"},
+      {"es": "Muchas gracias por todo.", "ja": "いろいろとありがとうございました。"}
+    ]
+  },
+  {
+    "id": "g-negation",
+    "title": "No + 動詞 ― 〜しません／〜ではありません",
+    "summary": "動詞の前に no を置くだけで否定文になります。nada（何も）などの否定の言葉と組み合わせても no は残ります。",
+    "body": [
+      {"type": "pattern", "es": "No + 動詞 + …", "ja": "〜しません／〜ではありません"},
+      {"type": "p", "text": "語順はそのままで、動詞の直前に no を足します。質問への答えでは「No, no + 動詞」と no が 2 回続きます。最初の no が「いいえ」、2 つ目が「〜しない」です。"},
+      {"type": "table", "head": ["否定の言葉", "意味", "例"], "rows": [
+        ["nada", "何も〜ない", "No quiero nada."],
+        ["nadie", "誰も〜ない", "No hay nadie."],
+        ["nunca", "一度も〜ない", "No he estado nunca aquí."],
+        ["sin", "〜なしで", "sin hielo"]
+      ]},
+      {"type": "tip", "text": "日本語と違い、nada や nadie を使っても動詞の前の no は消えません。「何も要りません」は No quiero nada です。"},
+      {"type": "tip", "text": "sin は料理の注文で便利です。sin gluten（グルテンなし）、sin azúcar（砂糖なし）のように使えます。"}
+    ],
+    "swap": [
+      {"es": "No hablo español.", "ja": "スペイン語は話せません。"},
+      {"es": "No entiendo.", "ja": "わかりません。"},
+      {"es": "No, no tengo reserva.", "ja": "いいえ、予約はしていません。"},
+      {"es": "No quiero nada más, gracias.", "ja": "もう何も要りません、ありがとうございます。"},
+      {"es": "No como carne.", "ja": "肉は食べません。"},
+      {"es": "Una Coca-Cola sin hielo, por favor.", "ja": "コーラを氷なしでお願いします。"},
+      {"es": "No funciona el aire acondicionado.", "ja": "エアコンが動きません。"}
+    ]
+  },
+  {
+    "id": "g-time-telling",
+    "title": "¿A qué hora…? ― 何時に〜ですか",
+    "summary": "時刻は la una（1 時）、las dos（2 時）のように la・las を付けて言います。¿A qué hora…? で開店時刻や発車時刻を聞けます。",
+    "body": [
+      {"type": "pattern", "es": "¿A qué hora + 動詞 + …?", "ja": "何時に〜ですか"},
+      {"type": "pattern", "es": "A la una / A las + 数", "ja": "1 時に／〜時に"},
+      {"type": "p", "text": "今の時刻は ¿Qué hora es? で聞きます。答えは 1 時だけ Es la una、ほかは Son las dos のように複数形です。"},
+      {"type": "table", "head": ["言い方", "意味"], "rows": [
+        ["las tres y cuarto", "3 時 15 分"],
+        ["las tres y media", "3 時半"],
+        ["las cuatro menos cuarto", "4 時 15 分前（3 時 45 分）"],
+        ["las cuatro menos diez", "4 時 10 分前（3 時 50 分）"],
+        ["de la mañana / de la tarde / de la noche", "午前の／午後の／夜の"]
+      ]},
+      {"type": "tip", "text": "駅や時刻表では 24 時間制を使い、las diecisiete treinta（17 時 30 分）のように言います。"},
+      {"type": "tip", "text": "スペインは食事の時間が遅く、昼食は 14〜16 時、夕食は 21 時以降が普通です。レストランもその時間に合わせて開きます。"}
+    ],
+    "swap": [
+      {"es": "¿Qué hora es? ―Son las tres y media.", "ja": "何時ですか？―3 時半です。"},
+      {"es": "¿A qué hora abre el museo?", "ja": "美術館は何時に開きますか？"},
+      {"es": "¿A qué hora sale el tren?", "ja": "列車は何時に出ますか？"},
+      {"es": "¿A qué hora es el desayuno?", "ja": "朝食は何時ですか？"},
+      {"es": "¿Hasta qué hora está abierto?", "ja": "何時まで開いていますか？"},
+      {"es": "Una mesa para las nueve, por favor.", "ja": "9 時に席をお願いします。"},
+      {"es": "El vuelo sale a las diecisiete cuarenta.", "ja": "飛行機は 17 時 40 分に出ます。"}
+    ]
+  },
+  {
+    "id": "g-dates",
+    "title": "el lunes / el 15 de mayo ― 曜日と日付",
+    "summary": "曜日や日付の前に el を付けると「〜に」の意味になります。日付は「日 + de + 月」の順で言います。",
+    "body": [
+      {"type": "table", "head": ["曜日", "スペイン語"], "rows": [
+        ["月", "lunes"],
+        ["火", "martes"],
+        ["水", "miércoles"],
+        ["木", "jueves"],
+        ["金", "viernes"],
+        ["土", "sábado"],
+        ["日", "domingo"]
+      ]},
+      {"type": "p", "text": "月は enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre です。曜日も月も小文字で書きます。"},
+      {"type": "pattern", "es": "el + 日 + de + 月", "ja": "〜月〜日に"},
+      {"type": "table", "head": ["スペイン語", "意味"], "rows": [
+        ["hoy / mañana / pasado mañana", "今日／明日／あさって"],
+        ["ayer", "昨日"],
+        ["el viernes", "（今度の）金曜日に"],
+        ["los lunes", "毎週月曜日に"]
+      ]},
+      {"type": "tip", "text": "mañana は「明日」と「朝」の両方の意味があります。「明日の朝」は mañana por la mañana です。美術館の掲示でよく見る Cerrado los lunes は「月曜休館」の意味です。"}
+    ],
+    "swap": [
+      {"es": "Quisiera reservar para el viernes.", "ja": "金曜日に予約したいのですが。"},
+      {"es": "Llego el tres de octubre.", "ja": "10 月 3 日に着きます。"},
+      {"es": "Me voy el domingo.", "ja": "日曜日に発ちます。"},
+      {"es": "¿Está abierto el lunes?", "ja": "月曜日は開いていますか？"},
+      {"es": "Dos billetes para mañana por la mañana.", "ja": "明日の朝の切符を 2 枚。"},
+      {"es": "¿Qué día es hoy?", "ja": "今日は何曜日ですか？"},
+      {"es": "Del diez al catorce de mayo.", "ja": "5 月 10 日から 14 日までです。"}
+    ]
+  },
+  {
+    "id": "g-demonstrative",
+    "title": "este / ese / aquel ― この／その／あの",
+    "summary": "este は「この」、ese は「その」、aquel は「あの」。名詞の性と数に合わせて形が変わります。名前の分からない物は esto・eso で指せます。",
+    "body": [
+      {"type": "p", "text": "日本語の「こそあ」とほぼ同じ感覚で使えます。指さしながら言えば、品名が分からなくても注文や買い物ができます。"},
+      {"type": "table", "head": ["", "男性", "女性", "男性・複数", "女性・複数"], "rows": [
+        ["この", "este", "esta", "estos", "estas"],
+        ["その", "ese", "esa", "esos", "esas"],
+        ["あの", "aquel", "aquella", "aquellos", "aquellas"]
+      ]},
+      {"type": "pattern", "es": "este / esta + 名詞", "ja": "この〜"},
+      {"type": "pattern", "es": "¿Qué es esto / eso?", "ja": "これ／それは何ですか"},
+      {"type": "tip", "text": "esto と eso は、名前も性も分からない物を指すときの形です。名詞を付けず、単独で使います。"}
+    ],
+    "swap": [
+      {"es": "Este, por favor.", "ja": "（指さして）これをお願いします。"},
+      {"es": "¿Qué es esto?", "ja": "これは何ですか？"},
+      {"es": "Quiero probar eso.", "ja": "それを食べてみたいです。"},
+      {"es": "¿Cuánto cuesta esta bolsa?", "ja": "このバッグはいくらですか？"},
+      {"es": "¿Cuánto cuestan estos zapatos?", "ja": "この靴はいくらですか？"},
+      {"es": "¿Este asiento está libre?", "ja": "この席は空いていますか？"},
+      {"es": "¿Qué es aquel edificio?", "ja": "あの建物は何ですか？"}
+    ]
+  },
+  {
+    "id": "g-object-pronoun",
+    "title": "lo / la / me / le ― 「それを」「私に」",
+    "summary": "lo・la（それを）や me（私に）などの短い言葉は、活用した動詞の前に置きます。Me lo llevo（これにします）は買い物の決まり文句です。",
+    "body": [
+      {"type": "p", "text": "すでに話に出た物や人は、短い代わりの言葉で言い換えます。日本語では省く「それを」「私に」も、スペイン語では言葉にするのが普通です。"},
+      {"type": "table", "head": ["言葉", "意味"], "rows": [
+        ["me", "私に／私を"],
+        ["le", "あなた（usted）に"],
+        ["nos", "私たちに／私たちを"],
+        ["lo", "それを（男性名詞）"],
+        ["la", "それを（女性名詞）"],
+        ["los / las", "それらを"]
+      ]},
+      {"type": "pattern", "es": "me / lo / la + 活用した動詞", "ja": "私に〜する／それを〜する"},
+      {"type": "p", "text": "動詞の原形と一緒に使うときは、原形の後ろにくっつけることもできます。¿Me puede ayudar? と ¿Puede ayudarme? は同じ意味です。"},
+      {"type": "tip", "text": "「私に」と「それを」が両方出てくるときは me lo の順にします。Me lo llevo は「それを持っていきます」、つまり「これを買います」という意味です。"}
+    ],
+    "swap": [
+      {"es": "Me lo llevo.", "ja": "これにします（買います）。"},
+      {"es": "¿Me puede ayudar?", "ja": "手伝っていただけますか？"},
+      {"es": "¿Nos hace una foto, por favor?", "ja": "私たちの写真を撮っていただけますか？"},
+      {"es": "¿Lo tiene en negro?", "ja": "これの黒はありますか？"},
+      {"es": "¿Me lo puede envolver para regalo?", "ja": "プレゼント用に包んでいただけますか？"},
+      {"es": "¿Me trae la cuenta, por favor?", "ja": "お会計を持ってきていただけますか？"}
+    ]
+  },
+  {
+    "id": "g-gustar",
+    "title": "Me gusta… ― 〜が好きです",
+    "summary": "me gusta + 好きなもので「〜が好きです」。好きなものが複数なら me gustan にします。me gustaría で「〜したいのですが」と控えめに希望も言えます。",
+    "body": [
+      {"type": "p", "text": "gustar は「〜が私に気に入られる」という言い方をします。そのため、動詞は好きな物が単数か複数かで変わります。"},
+      {"type": "pattern", "es": "Me gusta + 単数の名詞／動詞の原形", "ja": "〜が好きです"},
+      {"type": "pattern", "es": "Me gustan + 複数の名詞", "ja": "（複数の）〜が好きです"},
+      {"type": "table", "head": ["誰が好き？", "形"], "rows": [
+        ["私", "me gusta / me gustan"],
+        ["きみ（tú）", "te gusta / te gustan"],
+        ["あなた（usted）", "le gusta / le gustan"],
+        ["私たち", "nos gusta / nos gustan"]
+      ]},
+      {"type": "tip", "text": "もっと強く「大好きです」と言いたいときは me encanta / me encantan を使います。"},
+      {"type": "tip", "text": "me gustaría + 動詞の原形は「〜したいのですが」という丁寧な希望の言い方です。quisiera と同じように使えます。"}
+    ],
+    "swap": [
+      {"es": "Me gusta mucho Madrid.", "ja": "マドリードがとても気に入りました。"},
+      {"es": "Me encantan las tapas.", "ja": "タパスが大好きです。"},
+      {"es": "No me gustan las aceitunas.", "ja": "オリーブは苦手です。"},
+      {"es": "¿Le gusta el jamón?", "ja": "生ハムはお好きですか？"},
+      {"es": "Nos gusta pasear por el casco antiguo.", "ja": "旧市街を散歩するのが好きです。"},
+      {"es": "Me gustaría ver un espectáculo de flamenco.", "ja": "フラメンコのショーを見たいのですが。"}
+    ]
+  },
+  {
+    "id": "g-reflexive",
+    "title": "Me llamo… / Me quedo… ― 「自分を」を含む動詞",
+    "summary": "llamarse（〜という名前だ）や quedarse（とどまる）のように、me・se などと一緒に使う動詞があります。旅行でよく使うものは決まった言い方として覚えると楽です。",
+    "body": [
+      {"type": "p", "text": "辞書で -se が付いて載っている動詞は、主語に合わせて me・te・se などを動詞の前に置きます。「自分を〜と呼ぶ」「自分を〜にとどめる」のような感覚です。"},
+      {"type": "table", "head": ["主語", "llamarse（〜という名前だ）"], "rows": [
+        ["yo", "me llamo"],
+        ["tú", "te llamas"],
+        ["usted", "se llama"],
+        ["nosotros", "nos llamamos"],
+        ["ustedes", "se llaman"]
+      ]},
+      {"type": "table", "head": ["動詞", "意味", "例"], "rows": [
+        ["quedarse", "泊まる・とどまる", "Me quedo tres noches."],
+        ["bajarse", "（乗り物を）降りる", "Me bajo aquí."],
+        ["sentarse", "座る", "¿Me puedo sentar aquí?"],
+        ["perderse", "道に迷う", "Me he perdido."],
+        ["irse", "立ち去る・発つ", "Nos vamos mañana."]
+      ]},
+      {"type": "tip", "text": "Me he perdido（道に迷ってしまいました）のように、スペイン本国では「さっき起きたこと」を he + 過去分詞の形で言うのが普通です。決まった言い方として覚えておけば十分です。"}
+    ],
+    "swap": [
+      {"es": "Me llamo Yuki. ¿Y usted?", "ja": "ユキといいます。あなたは？"},
+      {"es": "Me quedo tres noches.", "ja": "3 泊します。"},
+      {"es": "¿Dónde me bajo para el museo?", "ja": "美術館へはどこで降りればいいですか？"},
+      {"es": "¿Me puedo sentar aquí?", "ja": "ここに座ってもいいですか？"},
+      {"es": "Perdone, me he perdido.", "ja": "すみません、道に迷ってしまいました。"},
+      {"es": "Nos vamos mañana temprano.", "ja": "明日の朝早くに発ちます。"},
+      {"es": "Me he equivocado de tren.", "ja": "列車を間違えてしまいました。"}
+    ]
+  }
+]
