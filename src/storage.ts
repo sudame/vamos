@@ -25,6 +25,9 @@ const isObj = (v: unknown): v is Record<string, unknown> => v != null && typeof 
 // produceMode と theme は型（string）しか見ていないので、知らない値もそのまま通る
 function validSetting<K extends keyof Settings>(key: K, v: unknown): v is Settings[K] {
   if (key === "cats") return v === null || (Array.isArray(v) && v.every((c) => typeof c === "string"));
+  if (key === "produceMode") return v === "flip" || v === "type";
+  if (key === "theme") return v === "auto" || v === "light" || v === "dark";
+  if (key === "rate") return typeof v === "number" && Number.isFinite(v) && v >= 0.5 && v <= 1.2;
   return typeof v === typeof DEFAULT_SETTINGS[key];
 }
 

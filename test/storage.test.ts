@@ -49,3 +49,10 @@ test("parseBackup は記録でない JSON を受け付けない", () => {
   assert.equal(parseBackup("{"), null);
   assert.ok(parseBackup('{"cards":{}}'));
 });
+
+test("migrate は選択肢にない設定の値を捨てる", () => {
+  const s = migrate({ settings: { produceMode: "foo", theme: "sepia", rate: 9 } });
+  assert.equal(s.settings.produceMode, DEFAULT_SETTINGS.produceMode);
+  assert.equal(s.settings.theme, DEFAULT_SETTINGS.theme);
+  assert.equal(s.settings.rate, DEFAULT_SETTINGS.rate);
+});

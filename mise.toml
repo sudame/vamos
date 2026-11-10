@@ -29,6 +29,10 @@ depends = ["build"]
 run = "node --test"
 
 # tsc は node_modules の typescript と型定義を使う
+# biome で整形と、直せる lint の指摘を直す
+[tasks.format]
+run = "biome check --write ."
+
 [tasks.lint]
 depends = ["install"]
 run = [

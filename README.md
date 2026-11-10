@@ -32,7 +32,8 @@ https://sudame.net/vamos/ で公開している。
 ```sh
 mise run dev     # 開発サーバー
 mise run test    # ビルドしてからテスト
-mise run lint    # biome、jactionlint、shellcheck
+mise run lint    # biome（lint と整形の検査）、tsc、jactionlint、shellcheck
+mise run format  # biome で整形し、直せる指摘を直す
 mise run build   # dist/ を作る
 ```
 
