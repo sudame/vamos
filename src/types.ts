@@ -145,7 +145,8 @@ export type Answer = ChoiceAnswer | TypedAnswer;
 
 // 1 ラウンドの成績。missed は間違えたフレーズの id
 export interface Round {
-  n: number;
+  n: number; // 進んだ数。新しいフレーズを見せただけのものも含む
+  learned: number; // 新しいフレーズを見せた数。正答率には入れない
   correct: number;
   missed: string[];
 }

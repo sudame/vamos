@@ -35,20 +35,37 @@ function formatWait(ms: number): string {
   return `${Math.round(d / 30)}か月後`;
 }
 
+const EMPTY_ROUND: Round = { n: 0, learned: 0, correct: 0, missed: [] };
+// ドリルから文法ノートへ移って戻ってきたとき、ラウンドの途中から続けるために画面の外に置く。
+// 長く離れていたら新しいラウンドにする
+const RESUME_MS = 30 * 60 * 1000;
+let saved: { round: Round; recent: string[]; at: number } | null = null;
+
+function resumeRound(): Round {
+  if (saved && Date.now() - saved.at < RESUME_MS && saved.round.n < ROUND) return saved.round;
+  saved = null;
+  return EMPTY_ROUND;
+}
+
 export function Drill({ state, update }: ScreenProps) {
   const { settings } = state;
   const phrases = useMemo(() => eligiblePhrases(settings), [settings]);
   const [q, setQ] = useState<Question | null>(null);
   const [answer, setAnswer] = useState<Answer | null>(null);
   const [revealed, setRevealed] = useState(false);
-  const [round, setRound] = useState<Round>({ n: 0, correct: 0, missed: [] });
+  const [round, setRound] = useState<Round>(resumeRound);
   const [finished, setFinished] = useState(false);
   const [autoNext, setAutoNext] = useState(false);
-  const recent = useRef<string[]>([]);
+  const recent = useRef<string[]>(saved?.recent ?? []);
   const cardsRef = useRef(state.cards);
   cardsRef.current = state.cards;
   const before = useRef<Card | null>(null); // 採点前のカード。「実は合ってた」で使う
-  const answered = useRef(0); // このラウンドで答えた数。採点の直後に次へ進むときも正しく数えるため ref で持つ
+  // このラウンドで進んだ数。採点の直後に次へ進むときも正しく数えるため ref で持つ
+  const answered = useRef(round.n);
+
+  useEffect(() => {
+    saved = { round, recent: recent.current, at: Date.now() };
+  }, [round]);
 
   const nextQuestion = () => {
     stopSpeaking();
@@ -76,7 +93,7 @@ export function Drill({ state, update }: ScreenProps) {
 
   const newRound = () => {
     answered.current = 0;
-    setRound({ n: 0, correct: 0, missed: [] });
+    setRound(EMPTY_ROUND);
     setFinished(false);
     nextQuestion();
   };
@@ -101,18 +118,20 @@ export function Drill({ state, update }: ScreenProps) {
     return () => clearTimeout(t);
   }, [autoNext]);
 
-  const grade = (g: Grade, correct: boolean) => {
+  // intro は見せただけなので、日ごとの記録とラウンドの正答数には入れない
+  const grade = (g: Grade, correct: boolean, intro = false) => {
     if (!q) return;
     const now = Date.now();
     answered.current += 1;
     update((s) => ({
       ...s,
       cards: { ...s.cards, [q.cardId]: schedule(s.cards[q.cardId] ?? newCard(), g, now) },
-      days: recordAnswer(s.days, now, correct),
+      days: intro ? s.days : recordAnswer(s.days, now, correct),
     }));
     setRound((r) => ({
       n: r.n + 1,
-      correct: r.correct + (correct ? 1 : 0),
+      learned: r.learned + (intro ? 1 : 0),
+      correct: r.correct + (correct && !intro ? 1 : 0),
       missed: correct || r.missed.includes(q.phrase.id) ? r.missed : [...r.missed, q.phrase.id],
     }));
   };
@@ -158,7 +177,7 @@ export function Drill({ state, update }: ScreenProps) {
   };
 
   const learnIntro = () => {
-    grade(GRADE.good, true);
+    grade(GRADE.good, true, true);
     advance();
   };
 
@@ -514,7 +533,13 @@ function TypeInput({ onSubmit }: { onSubmit: (typed: string) => void }) {
 
 function Summary({ round, settings, onAgain }: { round: Round; settings: Settings; onAgain: () => void }) {
   const missed = round.missed.map((id) => phraseById.get(id)).filter((p) => p != null);
-  const pct = round.n ? Math.round((round.correct / round.n) * 100) : 0;
+  const quizzed = round.n - round.learned;
+  const pct = quizzed ? Math.round((round.correct / quizzed) * 100) : 0;
+  let lead: string;
+  if (quizzed === 0) lead = "このあと、覚えたかを確かめる問題が出てきます。";
+  else if (pct >= 90) lead = "よく覚えています。";
+  else if (pct >= 60) lead = "その調子です。";
+  else lead = "間違えたフレーズは、すぐまた出てきます。";
   return (
     <div class="drill">
       <header class="drill-head">
@@ -523,13 +548,19 @@ function Summary({ round, settings, onAgain }: { round: Round; settings: Setting
         </a>
       </header>
       <div class="drill-body">
-        <p class="summary-score">
-          <b>{round.correct}</b>
-          <span>/{round.n} 問正解</span>
-        </p>
-        <p class="lead">
-          {pct >= 90 ? "よく覚えています。" : pct >= 60 ? "その調子です。" : "間違えたフレーズは、すぐまた出てきます。"}
-        </p>
+        {quizzed > 0 ? (
+          <p class="summary-score">
+            <b>{round.correct}</b>
+            <span>/{quizzed} 問正解</span>
+          </p>
+        ) : (
+          <p class="summary-score">
+            <b>{round.learned}</b>
+            <span>件のフレーズを覚えました</span>
+          </p>
+        )}
+        {quizzed > 0 && round.learned > 0 && <p class="lead">新しく覚えたフレーズ {round.learned} 件</p>}
+        <p class="lead">{lead}</p>
         {missed.length > 0 && (
           <section>
             <h2 class="section-title">間違えたフレーズ</h2>

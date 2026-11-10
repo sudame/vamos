@@ -115,21 +115,55 @@ function speakSynth(text: string, rate: number) {
   s.speak(u);
 }
 
+// 収録音声は fetch で丸ごと取り出し、Blob URL にして鳴らす。
+// audio 要素に直接 URL を渡すと Safari は Range リクエストを送るが、
+// Service Worker の precache は Range に応えないので、オフラインで鳴らなくなる。
+// Blob URL は Service Worker を通らないので、この問題が起きない
+const blobUrls = new Map<string, Promise<string>>();
+
+function blobUrlFor(url: string): Promise<string> {
+  let p = blobUrls.get(url);
+  if (!p) {
+    p = fetch(url).then(async (res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return URL.createObjectURL(await res.blob());
+    });
+    // 失敗したものは覚えず、次にまた取りに行く
+    p.catch(() => blobUrls.delete(url));
+    blobUrls.set(url, p);
+  }
+  return p;
+}
+
+// 新しく鳴らすたび、止めるたびに増える。古い再生の結果は無視する
+let generation = 0;
+
 export function speak(text: string, rate = BASE_RATE): void {
   stopSpeaking();
+  const my = generation;
   const url = prefs.useRecorded ? recordedUrl(text) : null;
   const p = url ? getPlayer() : null;
   if (!p || !url) {
     speakSynth(text, rate);
     return;
   }
-  p.src = url;
-  p.playbackRate = Math.min(2, Math.max(0.5, rate / BASE_RATE));
-  p.preservesPitch = true;
-  p.play().catch(() => speakSynth(text, rate));
+  const fallback = (e: unknown) => {
+    // 止めたせいの失敗と、もう次の文を鳴らしているときは、合成音声に切り替えない
+    if (my !== generation) return;
+    if (e instanceof DOMException && e.name === "AbortError") return;
+    speakSynth(text, rate);
+  };
+  blobUrlFor(url).then((src) => {
+    if (my !== generation) return;
+    p.src = src;
+    p.playbackRate = Math.min(2, Math.max(0.5, rate / BASE_RATE));
+    p.preservesPitch = true;
+    p.play().catch(fallback);
+  }, fallback);
 }
 
 export function stopSpeaking(): void {
+  generation++;
   synth()?.cancel();
   if (player && !player.paused) player.pause();
 }
