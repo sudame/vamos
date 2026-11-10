@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Vamos</title>
+  <rect width="512" height="512" rx="112" fill="#b3261e"/>
+  <rect y="150" width="512" height="212" fill="#f2b705"/>
+  <text x="256" y="330" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="230" font-weight="700" fill="#b3261e">¡V!</text>
+</svg>

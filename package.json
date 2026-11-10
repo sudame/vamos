@@ -1,0 +1,14 @@
+{
+  "name": "vamos",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "preact": "11.2.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "2.10.6",
+    "vite": "8.3.7",
+    "vite-plugin-pwa": "2.0.0",
+    "workbox-window": "7.4.1"
+  }
+}
